@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Al Shifa Clinic & Diagnostic Center</title>
+<title>Al Shifa Diagnostic Lab</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
   :root {
@@ -40,6 +40,7 @@
   }
   .top-bar-info { display: flex; gap: 1.5rem; }
   .top-bar-info span { display: flex; align-items: center; gap: 5px; }
+  .phone-link { color: var(--accent2); text-decoration: none; font-weight: 700; }
 
   /* 3D Canvas Background */
   #bg-canvas {
@@ -153,6 +154,10 @@
     border: none;
     cursor: pointer;
   }
+  .cta-whatsapp {
+    background: #25d366;
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+  }
   .cta-outline {
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -173,6 +178,31 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
+  /* Owner Card */
+  .owner-card {
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    background: linear-gradient(135deg, rgba(2, 132, 199, 0.2), rgba(3, 7, 18, 0.6));
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    backdrop-filter: blur(12px);
+    flex-wrap: wrap;
+  }
+  .owner-avatar {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; flex-shrink: 0;
+  }
+  .owner-details h3 { font-size: 1.5rem; color: #fff; margin-bottom: 0.3rem; }
+  .owner-details .title { color: var(--accent2); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
+  .owner-details p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
 
   /* Report Lookup Banner */
   .report-box {
@@ -257,25 +287,6 @@
   }
   .price { font-weight: 700; color: #fff; font-size: 1.1rem; }
 
-  /* Doctors Section */
-  .doctor-card {
-    text-align: center;
-    background: var(--glass);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    padding: 2rem 1.5rem;
-  }
-  .doctor-avatar {
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2.2rem; margin: 0 auto 1rem;
-  }
-  .doctor-card h4 { font-size: 1.2rem; margin-bottom: 0.2rem; }
-  .doctor-card .spec { color: var(--accent2); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.8rem; }
-  .doctor-card .timing { font-size: 0.8rem; color: var(--text-secondary); }
-
   /* Form Section */
   .cta-section {
     max-width: 650px;
@@ -332,6 +343,7 @@
     }
     .nav-links.active { display: flex; }
     section { padding: 3.5rem 5vw; }
+    .owner-card { text-align: center; justify-content: center; }
   }
 </style>
 </head>
@@ -340,68 +352,79 @@
 <!-- Top Info Bar -->
 <div class="top-bar">
   <div class="top-bar-info">
-    <span>🕒 Mon - Sat: 7:00 AM - 9:00 PM | Sun: 8:00 AM - 2:00 PM</span>
-    <span>📍 Main Market Road, Near City Hospital</span>
+    <span>🕒 Mon - Sat: 7:00 AM - 8:00 PM | Sun: 8:00 AM - 2:00 PM</span>
   </div>
   <div>
-    <span>📞 Emergency / Reception: <strong>+1 (800) 555-SHIFA</strong></span>
+    <span>📞 Call / WhatsApp: <a href="tel:+917780912275" class="phone-link">+91 77809 12275</a></span>
   </div>
 </div>
 
 <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
 <nav aria-label="Main Navigation">
-  <a href="#" class="logo">🩺 Al Shifa Clinic</a>
+  <a href="#" class="logo">🔬 Al Shifa Diagnostic Lab</a>
   <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">☰</button>
   <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About Us</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#tests">Test Rates</a></li>
-    <li><a href="#doctors">Specialists</a></li>
     <li><a href="#reports">Online Reports</a></li>
-    <li><a href="#appointment">Book Appointment</a></li>
+    <li><a href="#appointment">Book Test</a></li>
   </ul>
 </nav>
 
 <header class="hero">
-  <div class="hero-badge">✨ Advanced Molecular & Diagnostic Testing</div>
-  <h1>Accurate Testing.<br>Compassionate Healing.</h1>
-  <p>Al Shifa Clinic provides high-precision pathology lab tests, digital imaging, and specialist consultations with fast digital report turnaround.</p>
+  <div class="hero-badge">✨ Trusted Pathology & Blood Testing Center</div>
+  <h1>Accurate Lab Testing.<br>Fast Digital Reports.</h1>
+  <p>Al Shifa Diagnostic Lab provides high-precision pathology tests, blood analysis, and home sample collection services.</p>
   <div class="cta-group">
     <a href="#appointment" class="cta">Book Lab Test →</a>
-    <a href="#reports" class="cta cta-outline">Download Report</a>
+    <a href="https://wa.me/917780912275?text=Hello%20Al%20Shifa%20Lab,%20I%20want%20to%20inquire%20about%20a%20test." class="cta cta-whatsapp" target="_blank">Chat on WhatsApp</a>
   </div>
 </header>
 
 <main>
   <!-- Download Report Box -->
   <div id="reports" class="report-box reveal">
-    <h3>📄 Download Patient Lab Report</h3>
-    <p style="color: var(--text-secondary); font-size: 0.88rem;">Enter your Lab ID / Invoice Number printed on your cash receipt.</p>
-    <form class="report-form" onsubmit="alert('Searching for report... In production, this connects to your clinic database.'); return false;">
-      <input type="text" placeholder="e.g. SHIFA-2026-8891" required>
-      <input type="tel" placeholder="Registered Mobile No." required>
+    <h3>📄 Download Patient Test Report</h3>
+    <p style="color: var(--text-secondary); font-size: 0.88rem;">Enter your Lab Bill Number or Mobile Number to search for your digital report.</p>
+    <form class="report-form" onsubmit="alert('Searching for report... Connecting to Al Shifa Lab records.'); return false;">
+      <input type="text" placeholder="e.g. SHIFA-1029" required>
+      <input type="tel" placeholder="+91 7780912275" required>
       <button type="submit" class="cta" style="padding: 0.8rem 1.8rem;">View Report</button>
     </form>
   </div>
 
+  <!-- Owner / About Section -->
+  <section id="about">
+    <div class="owner-card reveal">
+      <div class="owner-avatar">👨‍🔬</div>
+      <div class="owner-details">
+        <h3>Aadil Ramzan Lone</h3>
+        <div class="title">Founder & Owner — Al Shifa Diagnostic Lab</div>
+        <p>Under the leadership of Aadil Ramzan Lone, Al Shifa Lab is committed to delivering highly accurate medical diagnostics, prompt reporting, and personal patient care. Reach out directly at <strong style="color: #fff;">+91 77809 12275</strong> for inquiries or urgent testing requests.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- Clinical Services -->
   <section id="services">
-    <h2 class="section-title reveal">Clinical <span>Services</span></h2>
+    <h2 class="section-title reveal">Laboratory <span>Services</span></h2>
     <div class="cards">
       <article class="card reveal">
-        <span class="icon">🔬</span>
-        <h3>Pathology & Blood Lab</h3>
-        <p>Automated CBC, biochemistry, hormone assays, and immunology testing using fully calibrated equipment.</p>
+        <span class="icon">🩸</span>
+        <h3>Pathology & Hematology</h3>
+        <p>Complete blood counts, hemoglobin, blood grouping, ESR, and infection screenings.</p>
       </article>
       <article class="card reveal">
-        <span class="icon">🫀</span>
-        <h3>Cardiology & ECG</h3>
-        <p>Computerized 12-lead ECG, blood pressure monitoring, and cardiovascular screening tests.</p>
+        <span class="icon">🧪</span>
+        <h3>Biochemistry Tests</h3>
+        <p>Kidney function (KFT), Liver function (LFT), Lipid profile, and Blood Sugar testing.</p>
       </article>
       <article class="card reveal">
         <span class="icon">🏠</span>
         <h3>Home Sample Collection</h3>
-        <p>Book a trained phlebotomist to collect blood/urine samples safely from the comfort of your home.</p>
+        <p>Call or WhatsApp +91 7780912275 to schedule safe home sample pickup at your convenient time.</p>
       </article>
     </div>
   </section>
@@ -413,67 +436,42 @@
       <div class="test-card">
         <div>
           <h4>Complete Blood Count (CBC)</h4>
-          <p class="desc">Screens for anemia, white cell counts, platelets & infections.</p>
+          <p class="desc">Screens for anemia, infections, white cells & platelet count.</p>
         </div>
         <div class="meta">
-          <span>Fasting: Not required</span>
-          <span class="price">$15</span>
+          <span>Fast Results</span>
+          <span class="price">₹250</span>
         </div>
       </div>
       <div class="test-card">
         <div>
-          <h4>Lipid Profile (Heart Risk)</h4>
-          <p class="desc">Cholesterol (HDL, LDL), Triglycerides and Cardiac Risk ratio.</p>
+          <h4>Blood Sugar (Fasting / PP)</h4>
+          <p class="desc">Monitors glucose levels for diabetes assessment.</p>
+        </div>
+        <div class="meta">
+          <span>Same-Day Report</span>
+          <span class="price">₹100</span>
+        </div>
+      </div>
+      <div class="test-card">
+        <div>
+          <h4>Lipid Profile (Cholesterol)</h4>
+          <p class="desc">Evaluates HDL, LDL, and Triglycerides for heart health.</p>
         </div>
         <div class="meta">
           <span>10-12 Hrs Fasting</span>
-          <span class="price">$30</span>
-        </div>
-      </div>
-      <div class="test-card">
-        <div>
-          <h4>HbA1c & Fasting Glucose</h4>
-          <p class="desc">3-Month average blood sugar level assessment for diabetes control.</p>
-        </div>
-        <div class="meta">
-          <span>Overnight Fasting</span>
-          <span class="price">$25</span>
+          <span class="price">₹500</span>
         </div>
       </div>
       <div class="test-card">
         <div>
           <h4>Thyroid Profile (T3, T4, TSH)</h4>
-          <p class="desc">Evaluates thyroid gland activity and metabolic function.</p>
+          <p class="desc">Evaluates thyroid gland function and metabolic health.</p>
         </div>
         <div class="meta">
-          <span>Morning sample pref.</span>
-          <span class="price">$35</span>
+          <span>Comprehensive</span>
+          <span class="price">₹450</span>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Doctors Section -->
-  <section id="doctors">
-    <h2 class="section-title reveal">Consulting <span>Specialists</span></h2>
-    <div class="cards">
-      <div class="doctor-card reveal">
-        <div class="doctor-avatar">👨‍⚕️</div>
-        <h4>Dr. Ahmed Hassan</h4>
-        <div class="spec">MBBS, MD (General Physician)</div>
-        <div class="timing">Mon - Fri: 10:00 AM - 2:00 PM</div>
-      </div>
-      <div class="doctor-card reveal">
-        <div class="doctor-avatar">👩‍⚕️</div>
-        <h4>Dr. Fatima Zahra</h4>
-        <div class="spec">Pathologist & Lab Director</div>
-        <div class="timing">Mon - Sat: 8:00 AM - 4:00 PM</div>
-      </div>
-      <div class="doctor-card reveal">
-        <div class="doctor-avatar">👨‍⚕️</div>
-        <h4>Dr. Bilal Khan</h4>
-        <div class="spec">Consultant Cardiologist</div>
-        <div class="timing">Tue & Thu: 4:00 PM - 8:00 PM</div>
       </div>
     </div>
   </section>
@@ -481,26 +479,27 @@
   <!-- Appointment Form -->
   <section id="appointment">
     <div class="cta-section reveal" style="text-align: center;">
-      <h2>Book Appointment / Home Collection</h2>
-      <p style="color: var(--text-secondary); font-size: 0.9rem;">Fill out the form to schedule your lab visit or home sample collection.</p>
+      <h2>Book Test / Home Sample Pickup</h2>
+      <p style="color: var(--text-secondary); font-size: 0.9rem;">Fill out the form below or call <strong style="color: #fff;">+91 7780912275</strong> directly.</p>
       
-      <form class="contact-form" action="#" method="POST" onsubmit="alert('Thank you! Al Shifa Clinic receptionist will call you shortly to confirm your booking.'); return false;">
+      <form class="contact-form" action="#" method="POST" onsubmit="alert('Thank you! Aadil Ramzan Lone & the Al Shifa Lab team will contact you shortly.'); return false;">
         <div class="form-group">
           <label for="name">Patient Name</label>
           <input type="text" id="name" required placeholder="Full Name">
         </div>
         <div class="form-group">
           <label for="phone">Phone / WhatsApp</label>
-          <input type="tel" id="phone" required placeholder="+123 456 7890">
+          <input type="tel" id="phone" required placeholder="+91 77809 12275">
         </div>
         <div class="form-group">
-          <label for="service">Select Required Service</label>
+          <label for="service">Select Required Test / Service</label>
           <select id="service" required>
             <option value="">-- Choose Option --</option>
-            <option value="pathology">Lab Test at Clinic</option>
-            <option value="home-sample">Home Sample Collection</option>
-            <option value="doctor-appointment">Doctor Consultation</option>
-            <option value="ecg">ECG / Heart Checkup</option>
+            <option value="cbc">Complete Blood Count (CBC)</option>
+            <option value="blood-sugar">Blood Sugar Test</option>
+            <option value="lipid">Lipid Profile</option>
+            <option value="thyroid">Thyroid Profile</option>
+            <option value="home-collection">Home Sample Collection</option>
           </select>
         </div>
         <div class="form-group">
@@ -514,11 +513,11 @@
 </main>
 
 <footer>
-  © 2026 Al Shifa Clinic & Diagnostic Center. Reliable Care You Can Trust.
+  © 2026 Al Shifa Diagnostic Lab — Owner: Aadil Ramzan Lone (+91 7780912275). All Rights Reserved.
 </footer>
 
 <script>
-  // ===== Three.js DNA Double-Helix Background Animation =====
+  // ===== Three.js DNA Animation =====
   const canvas = document.getElementById('bg-canvas');
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -528,7 +527,6 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  // Build DNA Strand
   const dnaGroup = new THREE.Group();
   const strandPoints = 35;
   const radius = 9;
@@ -542,21 +540,18 @@
     const angle = i * 0.25;
     const y = i * heightStep;
 
-    // Strand 1
     const x1 = Math.cos(angle) * radius;
     const z1 = Math.sin(angle) * radius;
     const p1 = new THREE.Mesh(sphereGeo, matBlue);
     p1.position.set(x1, y, z1);
     dnaGroup.add(p1);
 
-    // Strand 2 (Opposite side)
     const x2 = Math.cos(angle + Math.PI) * radius;
     const z2 = Math.sin(angle + Math.PI) * radius;
     const p2 = new THREE.Mesh(sphereGeo, matCyan);
     p2.position.set(x2, y, z2);
     dnaGroup.add(p2);
 
-    // Connecting Rungs (base pairs) every 2 steps
     if (i % 2 === 0) {
       const lineGeo = new THREE.BufferGeometry().setFromPoints([
         new THREE.Vector3(x1, y, z1),
@@ -568,10 +563,9 @@
     }
   }
 
-  dnaGroup.rotation.z = 0.3; // Slight incline
+  dnaGroup.rotation.z = 0.3;
   scene.add(dnaGroup);
 
-  // Background Particles
   const pCount = 800;
   const pGeo = new THREE.BufferGeometry();
   const pPos = new Float32Array(pCount * 3);
@@ -615,13 +609,11 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // ===== Intersection Observer =====
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // ===== Mobile Navigation =====
   const menuToggle = document.getElementById('menuToggle');
   const navLinks = document.getElementById('navLinks');
   menuToggle.addEventListener('click', () => {
