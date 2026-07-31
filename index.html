@@ -622,7 +622,7 @@
     document.getElementById('instantBookingModal').classList.add('active');
   }
 
-  // FIXED RELIABLE WHATSAPP DIRECT REDIRECT
+  // FIXED RELIABLE WHATSAPP DIRECT REDIRECT WITH FULL DATE & TIME ENCODING
   function submitInstantBooking(e) {
     e.preventDefault();
     const test = document.getElementById('instantTestName').value;
@@ -650,19 +650,19 @@
       name, phone, test, preferredDateTime: formattedDateTime, createdAt: new Date().toISOString() 
     }).catch(err => console.error("Firebase save error:", err));
 
-    // 2. Build multi-compatible WhatsApp URL
-    const textMessage = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*%0A%0A` +
-                        `👤 *Patient Name:* ${encodeURIComponent(name)}%0A` +
-                        `📞 *Contact Number:* ${encodeURIComponent(phone)}%0A` +
-                        `🔬 *Requested Test:* ${encodeURIComponent(test)}%0A` +
-                        `⏰ *Preferred Date & Time:* ${encodeURIComponent(formattedDateTime)}%0A%0A` +
+    // 2. Build multi-compatible WhatsApp URL with full text component encoding
+    const messageText = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*\n\n` +
+                        `👤 *Patient Name:* ${name}\n` +
+                        `📞 *Contact Number:* ${phone}\n` +
+                        `🔬 *Requested Test:* ${test}\n` +
+                        `⏰ *Preferred Date & Time:* ${formattedDateTime}\n\n` +
                         `_Sent via Al Shifa Lab Website_`;
 
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=917780912275&text=${textMessage}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=917780912275&text=${encodeURIComponent(messageText)}`;
 
     closeModal('instantBookingModal');
 
-    // 3. Direct synchronous browser navigation (Bypasses mobile popup blockers)
+    // 3. Direct synchronous browser navigation
     window.location.href = whatsappUrl;
   }
 
@@ -814,14 +814,14 @@
       name, phone, test, preferredDateTime: formattedDateTime, createdAt: new Date().toISOString() 
     }).catch(err => console.error("Firebase save error:", err));
 
-    const textMessage = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*%0A%0A` +
-                        `👤 *Patient Name:* ${encodeURIComponent(name)}%0A` +
-                        `📞 *Contact Number:* ${encodeURIComponent(phone)}%0A` +
-                        `🔬 *Requested Test:* ${encodeURIComponent(test)}%0A` +
-                        `⏰ *Preferred Date & Time:* ${encodeURIComponent(formattedDateTime)}%0A%0A` +
+    const messageText = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*\n\n` +
+                        `👤 *Patient Name:* ${name}\n` +
+                        `📞 *Contact Number:* ${phone}\n` +
+                        `🔬 *Requested Test:* ${test}\n` +
+                        `⏰ *Preferred Date & Time:* ${formattedDateTime}\n\n` +
                         `_Sent via Al Shifa Lab Website_`;
 
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=917780912275&text=${textMessage}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=917780912275&text=${encodeURIComponent(messageText)}`;
 
     document.getElementById('bookName').value = '';
     document.getElementById('bookPhone').value = '';
