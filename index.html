@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXUS — Ultra Modern Business</title>
+<title>Al Shifa Clinic & Diagnostics</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
   :root {
-    --accent: #6d5efc;
+    --accent: #2563eb;
     --accent2: #00e5ff;
-    --bg: #05060f;
+    --bg: #050814;
     --glass: rgba(255, 255, 255, 0.06);
     --text-primary: #ffffff;
-    --text-secondary: #c2c2d6; /* Enhanced contrast ratio */
+    --text-secondary: #c2c2d6;
   }
   
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,7 +25,6 @@
     overflow-x: hidden;
   }
 
-  /* Focus rings for accessibility */
   :focus-visible {
     outline: 2px solid var(--accent2);
     outline-offset: 4px;
@@ -50,7 +49,7 @@
     padding: 1.2rem 5vw;
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    background: rgba(5, 6, 15, 0.6);
+    background: rgba(5, 8, 20, 0.7);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     z-index: 100;
   }
@@ -58,14 +57,17 @@
   .logo {
     font-size: 1.5rem;
     font-weight: 800;
-    letter-spacing: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #00e5ff, #3b82f6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a {
     color: var(--text-secondary);
     text-decoration: none;
@@ -85,7 +87,6 @@
   .nav-links a:hover, .nav-links a:focus-visible { color: #fff; }
   .nav-links a:hover::after, .nav-links a:focus-visible::after { width: 100%; }
 
-  /* Mobile Nav Toggle */
   .menu-toggle {
     display: none;
     background: none;
@@ -93,7 +94,6 @@
     color: #fff;
     font-size: 1.8rem;
     cursor: pointer;
-    aria-label: "Toggle Navigation";
   }
 
   /* Hero */
@@ -107,7 +107,7 @@
     padding: 6rem 6vw 4rem;
   }
   .hero h1 {
-    font-size: clamp(2.2rem, 6.5vw, 5.5rem);
+    font-size: clamp(2.2rem, 6vw, 5rem);
     font-weight: 900;
     line-height: 1.1;
     letter-spacing: -1px;
@@ -120,31 +120,42 @@
     margin: 1.5rem 0 2.5rem;
     font-size: clamp(1rem, 1.8vw, 1.25rem);
     color: var(--text-secondary);
-    max-width: 620px;
+    max-width: 650px;
     animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    opacity: 0;
+  }
+  .cta-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
     opacity: 0;
   }
   .cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.9rem 2.4rem;
+    padding: 0.9rem 2.2rem;
     border-radius: 50px;
     font-weight: 600;
     font-size: 1rem;
     color: #fff;
     text-decoration: none;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
-    box-shadow: 0 8px 30px rgba(109, 94, 252, 0.4);
+    box-shadow: 0 8px 30px rgba(0, 229, 255, 0.3);
     transition: transform 0.3s, box-shadow 0.3s;
-    animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-    opacity: 0;
     border: none;
     cursor: pointer;
   }
+  .cta-outline {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+  }
   .cta:hover, .cta:focus-visible {
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(0, 229, 255, 0.5);
+    box-shadow: 0 12px 40px rgba(0, 229, 255, 0.4);
   }
 
   /* Sections */
@@ -157,15 +168,15 @@
     letter-spacing: -1px;
   }
   .section-title span {
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    background: linear-gradient(90deg, var(--accent2), #3b82f6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
-  /* 3D Cards */
+  /* Cards */
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 2rem;
     max-width: 1150px;
     margin: 0 auto;
@@ -180,29 +191,43 @@
     -webkit-backdrop-filter: blur(12px);
     transition: transform 0.2s ease, box-shadow 0.3s, border-color 0.3s;
     transform-style: preserve-3d;
-    will-change: transform;
   }
   .card:hover {
-    box-shadow: 0 20px 50px rgba(109, 94, 252, 0.25);
-    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 20px 50px rgba(0, 229, 255, 0.2);
+    border-color: rgba(0, 229, 255, 0.3);
   }
-  .card .icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    display: inline-block;
-    transform: translateZ(30px);
+  .card .icon { font-size: 2.5rem; margin-bottom: 1rem; display: inline-block; }
+  .card h3 { font-size: 1.35rem; margin-bottom: 0.8rem; }
+  .card p { color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem; }
+
+  /* Test Directory / Pricing Table */
+  .test-grid {
+    max-width: 950px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
   }
-  .card h3 {
-    font-size: 1.35rem;
-    margin-bottom: 0.8rem;
-    transform: translateZ(20px);
+  .test-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
-  .card p {
-    color: var(--text-secondary);
-    line-height: 1.6;
-    font-size: 0.95rem;
-    transform: translateZ(10px);
+  .test-card h4 { font-size: 1.2rem; color: var(--accent2); margin-bottom: 0.4rem; }
+  .test-card .desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; }
+  .test-card .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 0.8rem;
+    font-size: 0.9rem;
   }
+  .price { font-weight: 700; color: #fff; }
 
   /* Stats */
   .stats {
@@ -215,24 +240,23 @@
   .stat h2 {
     font-size: clamp(2.5rem, 5vw, 3.8rem);
     font-weight: 900;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    background: linear-gradient(90deg, var(--accent2), #3b82f6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   .stat p { color: var(--text-secondary); margin-top: 0.3rem; font-weight: 500; }
 
-  /* Contact Section Form */
+  /* Form Section */
   .cta-section {
     max-width: 700px;
     margin: 0 auto;
-    background: linear-gradient(135deg, rgba(109, 94, 252, 0.12), rgba(0, 229, 255, 0.08));
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(0, 229, 255, 0.08));
     border-radius: 28px;
     padding: 3.5rem 2rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(12px);
     text-align: center;
   }
-  .cta-section h2 { font-size: clamp(1.8rem, 3.5vw, 2.5rem); margin-bottom: 1rem; }
   
   .contact-form {
     display: flex;
@@ -243,20 +267,17 @@
   }
   .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
   .form-group label { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; }
-  .form-group input, .form-group textarea {
+  .form-group input, .form-group select, .form-group textarea {
     width: 100%;
     padding: 0.8rem 1.2rem;
     border-radius: 12px;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: #fff;
     font-family: inherit;
     font-size: 0.95rem;
   }
-  .form-group input:focus, .form-group textarea:focus {
-    border-color: var(--accent2);
-    outline: none;
-  }
+  .form-group select option { background: #050814; color: #fff; }
 
   footer {
     text-align: center;
@@ -266,12 +287,10 @@
     border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 
-  /* Scroll reveal */
   .reveal { 
     opacity: 0; 
     transform: translateY(40px); 
     transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
-    will-change: opacity, transform;
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
@@ -280,14 +299,13 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Responsive Rules */
   @media (max-width: 768px) {
     .menu-toggle { display: block; }
     .nav-links {
       position: absolute;
       top: 100%; left: 0; width: 100%;
       flex-direction: column;
-      background: rgba(5, 6, 15, 0.95);
+      background: rgba(5, 8, 20, 0.95);
       backdrop-filter: blur(20px);
       padding: 1.5rem 2rem;
       gap: 1.5rem;
@@ -304,80 +322,145 @@
 <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
 <nav aria-label="Main Navigation">
-  <a href="#" class="logo">NEXUS</a>
+  <a href="#" class="logo">🏥 Al Shifa Clinic</a>
   <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-label="Toggle navigation menu">☰</button>
   <ul class="nav-links" id="navLinks">
-    <li><a href="#features">Features</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#tests">Tests & Packages</a></li>
     <li><a href="#stats">Impact</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#appointment">Book Appointment</a></li>
   </ul>
 </nav>
 
 <header class="hero">
-  <h1>Build The Future,<br>Today.</h1>
-  <p>We craft next-generation digital experiences that push boundaries and elevate your brand into a new dimension.</p>
-  <a href="#contact" class="cta">Get Started →</a>
+  <h1>Accurate Diagnostics,<br>Compassionate Care.</h1>
+  <p>Welcome to Al Shifa Clinic. We deliver fast, reliable medical testing and expert consultations powered by modern lab technology.</p>
+  <div class="cta-group">
+    <a href="#appointment" class="cta">Book a Test →</a>
+    <a href="#tests" class="cta cta-outline">View Test Prices</a>
+  </div>
 </header>
 
 <main>
-  <section id="features" aria-labelledby="features-title">
-    <h2 id="features-title" class="section-title reveal">What We <span>Deliver</span></h2>
+  <!-- Services -->
+  <section id="services" aria-labelledby="services-title">
+    <h2 id="services-title" class="section-title reveal">Clinical <span>Services</span></h2>
     <div class="cards">
       <article class="card reveal">
-        <span class="icon" role="img" aria-label="Lightning">⚡</span>
-        <h3>Lightning Fast</h3>
-        <p>Blazing performance engineered for scale, ensuring your users never wait a single moment.</p>
+        <span class="icon" role="img" aria-label="Microscope">🔬</span>
+        <h3>Pathology Lab</h3>
+        <p>Comprehensive blood, urine, and tissue testing with high-precision automated analyzers.</p>
       </article>
       <article class="card reveal">
-        <span class="icon" role="img" aria-label="Palette">🎨</span>
-        <h3>Stunning Design</h3>
-        <p>Immersive, modern interfaces that captivate visitors and drive real audience engagement.</p>
+        <span class="icon" role="img" aria-label="Heart">🫀</span>
+        <h3>ECG & Cardiology</h3>
+        <p>Quick, non-invasive heart health screenings and routine cardiovascular checkups.</p>
       </article>
       <article class="card reveal">
-        <span class="icon" role="img" aria-label="Rocket">🚀</span>
-        <h3>Future Ready</h3>
-        <p>Built on cutting-edge technology standards that keep you continuously ahead of competitors.</p>
+        <span class="icon" role="img" aria-label="File">📄</span>
+        <h3>Digital Reports</h3>
+        <p>Get your test results delivered directly to your email or WhatsApp within hours.</p>
       </article>
     </div>
   </section>
 
+  <!-- Popular Tests -->
+  <section id="tests" aria-labelledby="tests-title">
+    <h2 id="tests-title" class="section-title reveal">Popular <span>Test Packages</span></h2>
+    <div class="test-grid reveal">
+      <div class="test-card">
+        <div>
+          <h4>Complete Blood Count (CBC)</h4>
+          <p class="desc">Screens for anemia, infection, and general blood health.</p>
+        </div>
+        <div class="meta">
+          <span>Fast 10-Hour Fasting</span>
+          <span class="price">$20</span>
+        </div>
+      </div>
+      <div class="test-card">
+        <div>
+          <h4>Lipid Profile (Cholesterol)</h4>
+          <p class="desc">Measures HDL, LDL, and triglycerides for heart health.</p>
+        </div>
+        <div class="meta">
+          <span>12-Hour Fasting Req.</span>
+          <span class="price">$35</span>
+        </div>
+      </div>
+      <div class="test-card">
+        <div>
+          <h4>Diabetes Screen (HbA1c + Sugar)</h4>
+          <p class="desc">Evaluates average blood sugar levels over the past 3 months.</p>
+        </div>
+        <div class="meta">
+          <span>Same-Day Report</span>
+          <span class="price">$30</span>
+        </div>
+      </div>
+      <div class="test-card">
+        <div>
+          <h4>Full Body Health Checkup</h4>
+          <p class="desc">CBC, Kidney Function, Liver Function, Lipid Profile, and Urine Analysis.</p>
+        </div>
+        <div class="meta">
+          <span>Comprehensive</span>
+          <span class="price">$99</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
   <section id="stats" aria-labelledby="stats-title">
-    <h2 id="stats-title" class="section-title reveal">Our <span>Impact</span></h2>
+    <h2 id="stats-title" class="section-title reveal">Why Choose <span>Al Shifa</span></h2>
     <div class="stats reveal">
-      <div class="stat"><h2>250+</h2><p>Projects Delivered</p></div>
-      <div class="stat"><h2>98%</h2><p>Client Satisfaction</p></div>
-      <div class="stat"><h2>40M</h2><p>Users Reached</p></div>
+      <div class="stat"><h2>15K+</h2><p>Patients Served</p></div>
+      <div class="stat"><h2>99.4%</h2><p>Diagnostic Accuracy</p></div>
+      <div class="stat"><h2>< 6 hrs</h2><p>Report Turnaround</p></div>
     </div>
   </section>
 
-  <section id="contact" aria-labelledby="contact-title">
+  <!-- Appointment Form -->
+  <section id="appointment" aria-labelledby="appointment-title">
     <div class="cta-section reveal">
-      <h2 id="contact-title">Ready to Transform?</h2>
-      <p style="color: var(--text-secondary);">Send us a message to start building together.</p>
+      <h2 id="appointment-title">Book an Appointment / Test</h2>
+      <p style="color: var(--text-secondary);">Fill out the form below to reserve your slot at Al Shifa Clinic.</p>
       
-      <form class="contact-form" action="#" method="POST" onsubmit="event.preventDefault();">
+      <form class="contact-form" action="#" method="POST" onsubmit="alert('Thank you! Al Shifa Clinic team will contact you shortly to confirm your appointment.'); return false;">
         <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required placeholder="Your Name">
+          <label for="patient-name">Full Name</label>
+          <input type="text" id="patient-name" required placeholder="Patient Name">
         </div>
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required placeholder="you@company.com">
+          <label for="phone">Phone / WhatsApp Number</label>
+          <input type="tel" id="phone" required placeholder="+123 456 7890">
         </div>
         <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="4" required placeholder="Tell us about your project..."></textarea>
+          <label for="test-type">Select Service or Test</label>
+          <select id="test-type" required>
+            <option value="">-- Choose Test Package --</option>
+            <option value="cbc">Complete Blood Count (CBC)</option>
+            <option value="lipid">Lipid Profile</option>
+            <option value="diabetes">Diabetes Screening</option>
+            <option value="full-checkup">Full Body Health Checkup</option>
+            <option value="doctor-consult">Doctor Consultation</option>
+          </select>
         </div>
-        <button type="submit" class="cta" style="margin-top:0.5rem; width:100%;">Send Message</button>
+        <div class="form-group">
+          <label for="preferred-date">Preferred Date</label>
+          <input type="date" id="preferred-date" required>
+        </div>
+        <button type="submit" class="cta" style="margin-top:0.5rem; width:100%;">Confirm Booking Request</button>
       </form>
     </div>
   </section>
 </main>
 
-<footer>© 2026 NEXUS. Crafted with passion.</footer>
+<footer>© 2026 Al Shifa Clinic & Diagnostics. All Rights Reserved.</footer>
 
 <script>
-  // ===== Three.js Animated Background =====
+  // ===== Three.js Background Animation =====
   const canvas = document.getElementById('bg-canvas');
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -387,8 +470,8 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  // Particle Field Geometry
-  const count = 1500;
+  // Particle Field
+  const count = 1400;
   const geometry = new THREE.BufferGeometry();
   const positions = new Float32Array(count * 3);
   for (let i = 0; i < count * 3; i++) positions[i] = (Math.random() - 0.5) * 160;
@@ -396,19 +479,22 @@
 
   const material = new THREE.PointsMaterial({
     size: 0.6,
-    color: 0x6d5efc,
+    color: 0x00e5ff,
     transparent: true,
-    opacity: 0.75,
+    opacity: 0.6,
     blending: THREE.AdditiveBlending
   });
   const particles = new THREE.Points(geometry, material);
   scene.add(particles);
 
-  // Wireframe Geometry
-  const knotGeo = new THREE.TorusKnotGeometry(9, 2.4, 100, 16);
-  const knotMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff, wireframe: true, transparent: true, opacity: 0.2 });
-  const knot = new THREE.Mesh(knotGeo, knotMat);
-  scene.add(knot);
+  // Floating Cross Geometry
+  const group = new THREE.Group();
+  const mat = new THREE.MeshBasicMaterial({ color: 0x2563eb, wireframe: true, transparent: true, opacity: 0.25 });
+  const box1 = new THREE.Mesh(new THREE.BoxGeometry(16, 5, 5), mat);
+  const box2 = new THREE.Mesh(new THREE.BoxGeometry(5, 16, 5), mat);
+  group.add(box1);
+  group.add(box2);
+  scene.add(group);
 
   let mouseX = 0, mouseY = 0;
   document.addEventListener('mousemove', e => {
@@ -416,7 +502,6 @@
     mouseY = (e.clientY / window.innerHeight - 0.5);
   }, { passive: true });
 
-  // Optimization: Pause rendering when user leaves tab
   let isTabActive = true;
   document.addEventListener('visibilitychange', () => {
     isTabActive = !document.hidden;
@@ -427,64 +512,36 @@
     if (!isTabActive) return;
     requestAnimationFrame(animate);
 
-    particles.rotation.y += 0.0005;
-    particles.rotation.x += 0.0002;
-    knot.rotation.x += 0.003;
-    knot.rotation.y += 0.005;
+    particles.rotation.y += 0.0004;
+    group.rotation.x += 0.004;
+    group.rotation.y += 0.006;
 
-    camera.position.x += (mouseX * 10 - camera.position.x) * 0.04;
-    camera.position.y += (-mouseY * 10 - camera.position.y) * 0.04;
+    camera.position.x += (mouseX * 8 - camera.position.x) * 0.04;
+    camera.position.y += (-mouseY * 8 - camera.position.y) * 0.04;
     camera.lookAt(scene.position);
 
     renderer.render(scene, camera);
   }
   animate();
 
-  // Debounced Window Resize Handler
-  let resizeTimeout;
   window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    }, 100);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // ===== Intersection Observer (Scroll Reveal) =====
+  // ===== Intersection Observer =====
   const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { 
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target); // Unobserve once rendered
-      } 
-    });
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // ===== Interactive 3D Card Tilt (Mouse Only) =====
-  const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-  if (!isTouchDevice) {
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
-        card.style.transform = `rotateY(${x * 12}deg) rotateX(${-y * 12}deg) translateY(-4px)`;
-      });
-      card.addEventListener('mouseleave', () => card.style.transform = 'rotateY(0) rotateX(0) translateY(0)');
-    });
-  }
-
-  // ===== Mobile Navigation Toggle =====
+  // ===== Mobile Menu Toggle =====
   const menuToggle = document.getElementById('menuToggle');
   const navLinks = document.getElementById('navLinks');
   menuToggle.addEventListener('click', () => {
-    const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
-    menuToggle.setAttribute('aria-expanded', !isExpanded);
     navLinks.classList.toggle('active');
   });
 </script>
 </body>
 </html>
-
