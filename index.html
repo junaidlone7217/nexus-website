@@ -27,6 +27,7 @@
     color: var(--text-primary);
   }
 
+  /* Top Info Bar */
   .top-bar {
     background: rgba(2, 132, 199, 0.25);
     border-bottom: 1px solid rgba(56, 189, 248, 0.25);
@@ -42,6 +43,15 @@
     gap: 4px;
   }
   .phone-link { color: var(--accent2); text-decoration: none; font-weight: 700; }
+  
+  .status-badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.7rem;
+  }
+  .status-open { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
+  .status-closed { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
 
   #bg-canvas {
     position: fixed;
@@ -144,23 +154,44 @@
     backdrop-filter: blur(10px);
   }
 
+  /* Dynamic Cards & Admin Controls */
   .test-grid {
     max-width: 1000px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 1.2rem;
   }
   .test-card {
-    background: rgba(15, 23, 42, 0.75);
-    border: 1px solid rgba(56, 189, 248, 0.2);
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.25);
     border-radius: 16px;
     padding: 1.2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     backdrop-filter: blur(12px);
+    position: relative;
   }
+
+  .admin-card-controls {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(225, 29, 72, 0.15);
+    border: 1px solid rgba(225, 29, 72, 0.3);
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    margin-bottom: 0.6rem;
+  }
+  .admin-mode-active .admin-card-controls { display: flex; }
+  
+  .card-edit-btn, .card-del-btn {
+    background: none; border: none; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+  }
+  .card-edit-btn { color: #38bdf8; }
+  .card-del-btn { color: #f43f5e; }
+
   .test-card h4 { font-size: 1.05rem; color: var(--accent2); margin-bottom: 0.3rem; }
   .test-card .desc { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.8rem; }
   .test-card .meta {
@@ -179,6 +210,7 @@
     color: var(--accent2); font-weight: 600; font-size: 0.8rem; cursor: pointer;
   }
 
+  /* Modals */
   .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(12px);
@@ -195,18 +227,19 @@
   .modal-close { position: absolute; top: 10px; right: 14px; font-size: 1.4rem; color: #9ca3af; cursor: pointer; background: none; border: none; }
 
   .auth-form { display: flex; flex-direction: column; gap: 0.8rem; text-align: left; margin-top: 0.8rem; }
-  .auth-form input, .auth-form select {
+  .auth-form input, .auth-form select, .auth-form textarea {
     width: 100%; padding: 0.75rem 0.9rem; border-radius: 10px;
     background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.15);
     color: #fff; font-size: 0.88rem;
+  }
+  .auth-form label {
+    font-size: 0.78rem; color: var(--accent2); margin-bottom: -0.4rem; font-weight: 600;
   }
 
   .admin-modal { max-width: 750px; text-align: left; max-height: 85vh; overflow-y: auto; }
   .admin-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.8rem; }
   .admin-table th, .admin-table td { padding: 0.6rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
   .admin-table th { color: var(--accent2); }
-
-  .rate-edit-row { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
 
   footer {
     text-align: center; padding: 1.5rem;
@@ -264,6 +297,7 @@
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
+      document.body.classList.add('admin-mode-active');
       document.getElementById('adminAuthStep').style.display = 'none';
       document.getElementById('adminContentStep').style.display = 'block';
       
@@ -274,6 +308,7 @@
 
       loadFirebaseAdminData();
     } else {
+      document.body.classList.remove('admin-mode-active');
       document.getElementById('adminAuthStep').style.display = 'block';
       document.getElementById('adminContentStep').style.display = 'none';
     }
@@ -294,7 +329,10 @@
 
 <div class="content-layer">
   <div class="top-bar">
-    <div>🕒 Mon-Sat: 7AM - 8PM | Sun: 8AM - 2PM</div>
+    <div>
+      <span id="labStatusBadge" class="status-badge">Checking Status...</span>
+      <span> 🕒 Hours: 8:00 AM - 6:00 PM</span>
+    </div>
     <div>📞 Call/WA: <a href="tel:+917780912275" class="phone-link">+91 77809 12275</a></div>
   </div>
 
@@ -315,111 +353,16 @@
     </div>
   </header>
 
-  <!-- Recommended Tests & Rate List -->
+  <!-- Recommended Tests & Dynamic Rate List -->
   <section id="rates">
-    <h2 class="section-title">Recommended <span>Lab Tests & Rates (₹)</span></h2>
+    <h2 class="section-title">Recommended <span>Lab Tests & Rates (₹ INR)</span></h2>
     
     <div class="search-container">
-      <input type="text" id="testSearchInput" class="search-input" placeholder="🔍 Search tests (e.g. CBC, KFT, Thyroid)..." onkeyup="filterTests()">
+      <input type="text" id="testSearchInput" class="search-input" placeholder="🔍 Search tests (e.g. CBC, KFT, Sugar)..." onkeyup="filterTests()">
     </div>
 
-    <div class="test-grid" id="publicTestGrid">
-      <div class="test-card" data-title="cbc complete blood count">
-        <div>
-          <h4>Complete Blood Count (CBC)</h4>
-          <p class="desc">Screens for anemia, white cell counts, platelets & infections.</p>
-        </div>
-        <div class="meta">
-          <span>No Fasting Req.</span>
-          <span class="price" id="price-cbc">₹250</span>
-        </div>
-        <button class="book-test-btn" onclick="quickBook('Complete Blood Count (CBC)')">Book Now</button>
-      </div>
-
-      <div class="test-card" data-title="blood sugar fasting pp glucose diabetes">
-        <div>
-          <h4>Blood Sugar Fasting / PP</h4>
-          <p class="desc">Evaluates glucose levels for diabetes assessment.</p>
-        </div>
-        <div class="meta">
-          <span>8-10 Hrs Fasting</span>
-          <span class="price" id="price-sugar">₹100</span>
-        </div>
-        <button class="book-test-btn" onclick="quickBook('Blood Sugar Fasting / PP')">Book Now</button>
-      </div>
-
-      <div class="test-card" data-title="lipid profile cholesterol heart">
-        <div>
-          <h4>Lipid Profile (Heart Risk)</h4>
-          <p class="desc">Cholesterol (HDL, LDL), Triglycerides and Cardiac Risk ratio.</p>
-        </div>
-        <div class="meta">
-          <span>10-12 Hrs Fasting</span>
-          <span class="price" id="price-lipid">₹500</span>
-        </div>
-        <button class="book-test-btn" onclick="quickBook('Lipid Profile')">Book Now</button>
-      </div>
-
-      <div class="test-card" data-title="thyroid profile t3 t4 tsh">
-        <div>
-          <h4>Thyroid Profile (T3, T4, TSH)</h4>
-          <p class="desc">Evaluates thyroid gland activity and metabolic function.</p>
-        </div>
-        <div class="meta">
-          <span>Morning Sample</span>
-          <span class="price" id="price-thyroid">₹450</span>
-        </div>
-        <button class="book-test-btn" onclick="quickBook('Thyroid Profile')">Book Now</button>
-      </div>
-
-      <div class="test-card" data-title="kft kidney function test urea creatinine">
-        <div>
-          <h4>Kidney Function Test (KFT)</h4>
-          <p class="desc">Evaluates Urea, Creatinine, Uric Acid, and Electrolytes.</p>
-        </div>
-        <div class="meta">
-          <span>Fasting Optional</span>
-          <span class="price" id="price-kft">₹600</span>
-        </div>
-        <button class="book-test-btn" onclick="quickBook('Kidney Function Test (KFT)')">Book Now</button>
-      </div>
-
-      <div class="test-card" data-title="lft liver function test bilirubin sgot sgpt">
-        <div>
-          <h4>Liver Function Test (LFT)</h4>
-          <p class="desc">Assesses Bilirubin, SGOT, SGPT, Alkaline Phosphatase.</p>
-        </div>
-        <div class="meta">
-          <span>8 Hrs Fasting</span>
-          <span class="price" id="price-lft">₹650</span>
-        </div>
-        <button class="book-test-btn" onclick="quickBook('Liver Function Test (LFT)')">Book Now</button>
-      </div>
-
-      <div class="test-card" data-title="hba1c diabetes 3 month sugar">
-        <div>
-          <h4>HbA1c (3-Month Sugar)</h4>
-          <p class="desc">Long-term blood glucose control monitoring.</p>
-        </div>
-        <div class="meta">
-          <span>No Fasting Req.</span>
-          <span class="price" id="price-hba1c">₹400</span>
-        </div>
-        <button class="book-test-btn" onclick="quickBook('HbA1c Test')">Book Now</button>
-      </div>
-
-      <div class="test-card" data-title="full body profile checkup health">
-        <div>
-          <h4>Full Body Health Profile</h4>
-          <p class="desc">Includes CBC, KFT, LFT, Lipid Profile & Urine Test.</p>
-        </div>
-        <div class="meta">
-          <span>Complete Checkup</span>
-          <span class="price" id="price-fullbody">₹1,200</span>
-        </div>
-        <button class="book-test-btn" onclick="quickBook('Full Body Health Profile')">Book Now</button>
-      </div>
-    </div>
+    <!-- Dynamic Container rendered via JavaScript -->
+    <div class="test-grid" id="publicTestGrid"></div>
   </section>
 
   <!-- Patient Booking Section -->
@@ -430,6 +373,10 @@
         <input type="text" id="bookName" placeholder="Patient Full Name" required>
         <input type="tel" id="bookPhone" placeholder="Mobile / WhatsApp Number (+91)" required>
         <input type="text" id="bookTest" placeholder="Required Test (e.g. CBC, KFT)" required>
+        
+        <label for="bookDateTime">Preferred Date & Time (Hours: 8:00 AM - 6:00 PM):</label>
+        <input type="datetime-local" id="bookDateTime" required>
+
         <button type="submit" id="submitBookingBtn" class="cta" style="width: 100%;">Submit Booking & Send to WhatsApp</button>
       </form>
     </div>
@@ -440,7 +387,7 @@
   </footer>
 </div>
 
-<!-- 1. PATIENT POPUP (3 Sec Auto Trigger) -->
+<!-- 1. PATIENT POPUP -->
 <div class="modal-overlay" id="authModal">
   <div class="modal-card">
     <button class="modal-close" onclick="closeModal('authModal')">✕</button>
@@ -475,21 +422,15 @@
         <button class="admin-btn" onclick="window.handleAdminSignOut()">Log Out</button>
       </div>
 
+      <!-- Add New Test Feature -->
       <div style="margin-top: 1rem; background: rgba(255,255,255,0.03); padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-        <h4 style="color: var(--accent2); font-size: 0.9rem;">💰 Update Test Rate List (INR ₹)</h4>
-        <form onsubmit="updateTestPrice(event)" class="rate-edit-row">
-          <select id="rateTestSelect" required>
-            <option value="cbc">CBC (Complete Blood Count)</option>
-            <option value="sugar">Blood Sugar Fasting/PP</option>
-            <option value="lipid">Lipid Profile</option>
-            <option value="thyroid">Thyroid Profile</option>
-            <option value="kft">Kidney Function Test (KFT)</option>
-            <option value="lft">Liver Function Test (LFT)</option>
-            <option value="hba1c">HbA1c Test</option>
-            <option value="fullbody">Full Body Profile</option>
-          </select>
-          <input type="number" id="newRateInput" placeholder="Price in ₹" required style="width: 110px; padding: 0.4rem;">
-          <button type="submit" class="cta" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Update</button>
+        <h4 style="color: var(--accent2); font-size: 0.9rem;">➕ Add New Custom Lab Test</h4>
+        <form onsubmit="addNewCustomTest(event)" class="auth-form">
+          <input type="text" id="newTestTitle" placeholder="Test Name (e.g. Vitamin D3)" required>
+          <input type="text" id="newTestDesc" placeholder="Description (e.g. Bone & Immune health)" required>
+          <input type="text" id="newTestReq" placeholder="Requirement (e.g. Fasting 8 Hrs)" required>
+          <input type="number" id="newTestPrice" placeholder="Price in ₹" required>
+          <button type="submit" class="cta" style="padding: 0.5rem; font-size: 0.85rem;">Add Test to Website</button>
         </form>
       </div>
 
@@ -504,8 +445,8 @@
       <h4 style="margin-top: 1.2rem; color: var(--accent2); font-size: 0.9rem;">Recent Patient Test Bookings:</h4>
       <div style="overflow-x: auto; max-height: 150px;">
         <table class="admin-table">
-          <thead><tr><th>Patient</th><th>Phone</th><th>Test</th></tr></thead>
-          <tbody id="firebaseBookingsTable"><tr><td colspan="3">Loading...</td></tr></tbody>
+          <thead><tr><th>Patient</th><th>Phone</th><th>Test</th><th>Date/Time</th></tr></thead>
+          <tbody id="firebaseBookingsTable"><tr><td colspan="4">Loading...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -514,6 +455,18 @@
 </div>
 
 <script>
+  // Default Tests Data
+  const defaultTests = [
+    { id: "cbc", title: "Complete Blood Count (CBC)", desc: "Screens for anemia, white cell counts, platelets & infections.", req: "No Fasting Req.", price: "250" },
+    { id: "sugar", title: "Blood Sugar Fasting / PP", desc: "Evaluates glucose levels for diabetes assessment.", req: "8-10 Hrs Fasting", price: "100" },
+    { id: "lipid", title: "Lipid Profile (Heart Risk)", desc: "Cholesterol (HDL, LDL), Triglycerides and Cardiac Risk ratio.", req: "10-12 Hrs Fasting", price: "500" },
+    { id: "thyroid", title: "Thyroid Profile (T3, T4, TSH)", desc: "Evaluates thyroid gland activity and metabolic function.", req: "Morning Sample", price: "450" },
+    { id: "kft", title: "Kidney Function Test (KFT)", desc: "Evaluates Urea, Creatinine, Uric Acid, and Electrolytes.", req: "Fasting Optional", price: "600" },
+    { id: "lft", title: "Liver Function Test (LFT)", desc: "Assesses Bilirubin, SGOT, SGPT, Alkaline Phosphatase.", req: "8 Hrs Fasting", price: "650" },
+    { id: "hba1c", title: "HbA1c (3-Month Sugar)", desc: "Long-term blood glucose control monitoring.", req: "No Fasting Req.", price: "400" },
+    { id: "fullbody", title: "Full Body Health Profile", desc: "Includes CBC, KFT, LFT, Lipid Profile & Urine Test.", req: "Complete Checkup", price: "1,200" }
+  ];
+
   window.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem('alshifa_user');
     if (saved) {
@@ -521,11 +474,103 @@
     } else {
       setTimeout(() => document.getElementById('authModal').classList.add('active'), 3000);
     }
-    loadRatesFromStorage();
+    renderTestGrid();
+    checkLabOperatingStatus();
   });
 
   function closeModal(id) { document.getElementById(id).classList.remove('active'); }
   function openAdminModal() { document.getElementById('adminModal').classList.add('active'); }
+
+  // Check Open/Closed Status
+  function checkLabOperatingStatus() {
+    const now = new Date();
+    const hours = now.getHours();
+    const statusBadge = document.getElementById('labStatusBadge');
+    
+    if (hours >= 8 && hours < 18) {
+      statusBadge.innerText = "🟢 OPEN NOW";
+      statusBadge.className = "status-badge status-open";
+    } else {
+      statusBadge.innerText = "🔴 CLOSED NOW";
+      statusBadge.className = "status-badge status-closed";
+    }
+  }
+
+  // Render Tests Grid Dynamically
+  function getStoredTests() {
+    return JSON.parse(localStorage.getItem('alshifa_custom_tests')) || defaultTests;
+  }
+
+  function renderTestGrid() {
+    const grid = document.getElementById('publicTestGrid');
+    const tests = getStoredTests();
+    
+    grid.innerHTML = tests.map(t => `
+      <div class="test-card" data-title="${t.title.toLowerCase()}">
+        <div class="admin-card-controls">
+          <span>🛠️ Admin Edit:</span>
+          <div>
+            <button class="card-edit-btn" onclick="editTestItem('${t.id}')">✏️ Edit</button>
+            <button class="card-del-btn" onclick="deleteTestItem('${t.id}')">🗑️ Delete</button>
+          </div>
+        </div>
+        <div>
+          <h4>${t.title}</h4>
+          <p class="desc">${t.desc}</p>
+        </div>
+        <div class="meta">
+          <span>${t.req}</span>
+          <span class="price">₹${t.price}</span>
+        </div>
+        <button class="book-test-btn" onclick="quickBook('${t.title}')">Book Now</button>
+      </div>
+    `).join('');
+  }
+
+  // Admin Edit & Delete Operations
+  function editTestItem(id) {
+    let tests = getStoredTests();
+    const index = tests.findIndex(t => t.id === id);
+    if (index === -1) return;
+
+    const newPrice = prompt(`Enter new Price in ₹ for "${tests[index].title}":`, tests[index].price);
+    if (newPrice !== null && newPrice !== "") {
+      tests[index].price = newPrice;
+      localStorage.setItem('alshifa_custom_tests', JSON.stringify(tests));
+      renderTestGrid();
+      alert("Price updated successfully!");
+    }
+  }
+
+  function deleteTestItem(id) {
+    if (confirm("Are you sure you want to delete this test card from the website?")) {
+      let tests = getStoredTests();
+      tests = tests.filter(t => t.id !== id);
+      localStorage.setItem('alshifa_custom_tests', JSON.stringify(tests));
+      renderTestGrid();
+    }
+  }
+
+  function addNewCustomTest(e) {
+    e.preventDefault();
+    const title = document.getElementById('newTestTitle').value;
+    const desc = document.getElementById('newTestDesc').value;
+    const req = document.getElementById('newTestReq').value;
+    const price = document.getElementById('newTestPrice').value;
+
+    let tests = getStoredTests();
+    const newId = "custom_" + Date.now();
+    tests.push({ id: newId, title, desc, req, price });
+
+    localStorage.setItem('alshifa_custom_tests', JSON.stringify(tests));
+    renderTestGrid();
+
+    alert("New test added to website!");
+    document.getElementById('newTestTitle').value = '';
+    document.getElementById('newTestDesc').value = '';
+    document.getElementById('newTestReq').value = '';
+    document.getElementById('newTestPrice').value = '';
+  }
 
   function quickBook(testName) {
     document.getElementById('bookTest').value = testName;
@@ -557,38 +602,54 @@
     }
   }
 
-  // GUARANTEED WHATSAPP SUBMISSION FIX
   function submitFirebaseBooking(e) {
     e.preventDefault();
-    const btn = document.getElementById('submitBookingBtn');
-    btn.innerText = "Processing...";
 
     const name = document.getElementById('bookName').value;
     const phone = document.getElementById('bookPhone').value;
     const test = document.getElementById('bookTest').value;
+    const dateTimeVal = document.getElementById('bookDateTime').value;
 
-    // Save asynchronously in background to Firebase
+    if (!dateTimeVal) {
+      alert("Please select a valid date and time for your appointment.");
+      return;
+    }
+
+    const selectedDate = new Date(dateTimeVal);
+    const hours = selectedDate.getHours();
+
+    if (hours < 8 || hours >= 18) {
+      alert("⚠️ Al Shifa Diagnostic Lab is closed at the selected time.\n\nPlease select a time between 8:00 AM and 6:00 PM.");
+      return;
+    }
+
+    const btn = document.getElementById('submitBookingBtn');
+    btn.innerText = "Processing...";
+
+    const formattedDateTime = selectedDate.toLocaleString('en-IN', {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    });
+
     window.addDoc(window.collection(window.db, "bookings"), { 
-      name, phone, test, date: new Date().toISOString() 
+      name, phone, test, preferredDateTime: formattedDateTime, createdAt: new Date().toISOString() 
     }).catch(err => console.error("Firebase error:", err));
 
-    // Format WhatsApp Message
     const textMessage = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*%0A%0A` +
                         `👤 *Patient Name:* ${encodeURIComponent(name)}%0A` +
                         `📞 *Contact Number:* ${encodeURIComponent(phone)}%0A` +
                         `🔬 *Requested Test:* ${encodeURIComponent(test)}%0A` +
-                        `📅 *Booking Time:* ${encodeURIComponent(new Date().toLocaleString())}%0A%0A` +
+                        `⏰ *Preferred Date & Time:* ${encodeURIComponent(formattedDateTime)}%0A%0A` +
                         `_Sent via Al Shifa Lab Website_`;
 
     const whatsappUrl = `https://wa.me/917780912275?text=${textMessage}`;
 
-    // Reset Form
     document.getElementById('bookName').value = '';
     document.getElementById('bookPhone').value = '';
     document.getElementById('bookTest').value = '';
+    document.getElementById('bookDateTime').value = '';
     btn.innerText = "Submit Booking & Send to WhatsApp";
 
-    // Immediate Direct Redirect to WhatsApp (Bypasses popup blocker on Mobile)
     window.location.href = whatsappUrl;
   }
 
@@ -604,31 +665,6 @@
     }
   }
 
-  function updateTestPrice(e) {
-    e.preventDefault();
-    const key = document.getElementById('rateTestSelect').value;
-    const newPrice = document.getElementById('newRateInput').value;
-
-    let rates = JSON.parse(localStorage.getItem('alshifa_rates') || '{}');
-    rates[key] = newPrice;
-    localStorage.setItem('alshifa_rates', JSON.stringify(rates));
-
-    loadRatesFromStorage();
-    alert(`Price updated to ₹${newPrice}!`);
-  }
-
-  function loadRatesFromStorage() {
-    let rates = JSON.parse(localStorage.getItem('alshifa_rates') || '{}');
-    if (rates.cbc) document.getElementById('price-cbc').innerText = `₹${rates.cbc}`;
-    if (rates.sugar) document.getElementById('price-sugar').innerText = `₹${rates.sugar}`;
-    if (rates.lipid) document.getElementById('price-lipid').innerText = `₹${rates.lipid}`;
-    if (rates.thyroid) document.getElementById('price-thyroid').innerText = `₹${rates.thyroid}`;
-    if (rates.kft) document.getElementById('price-kft').innerText = `₹${rates.kft}`;
-    if (rates.lft) document.getElementById('price-lft').innerText = `₹${rates.lft}`;
-    if (rates.hba1c) document.getElementById('price-hba1c').innerText = `₹${rates.hba1c}`;
-    if (rates.fullbody) document.getElementById('price-fullbody').innerText = `₹${rates.fullbody}`;
-  }
-
   async function loadFirebaseAdminData() {
     try {
       const usersSnap = await window.getDocs(window.collection(window.db, "patients"));
@@ -642,10 +678,10 @@
       });
 
       const bTable = document.getElementById('firebaseBookingsTable');
-      bTable.innerHTML = bookingsSnap.empty ? '<tr><td colspan="3">No test bookings.</td></tr>' : '';
+      bTable.innerHTML = bookingsSnap.empty ? '<tr><td colspan="4">No test bookings.</td></tr>' : '';
       bookingsSnap.forEach(doc => {
         const d = doc.data();
-        bTable.innerHTML += `<tr><td>${d.name}</td><td>${d.phone}</td><td>${d.test}</td></tr>`;
+        bTable.innerHTML += `<tr><td>${d.name}</td><td>${d.phone}</td><td>${d.test}</td><td>${d.preferredDateTime || 'N/A'}</td></tr>`;
       });
     } catch (err) {
       console.error(err);
