@@ -210,6 +210,25 @@
     color: var(--accent2); font-weight: 600; font-size: 0.8rem; cursor: pointer;
   }
 
+  /* Live Suggestions Box */
+  .suggestions-box {
+    background: rgba(9, 13, 22, 0.95);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-top: 0.2rem;
+    display: none;
+  }
+  .suggestion-item {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.82rem;
+    color: var(--accent2);
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .suggestion-item:hover { background: rgba(56, 189, 248, 0.2); }
+
   /* Modals */
   .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -372,7 +391,11 @@
       <form class="auth-form" onsubmit="submitFirebaseBooking(event)">
         <input type="text" id="bookName" placeholder="Patient Full Name" required>
         <input type="tel" id="bookPhone" placeholder="Mobile / WhatsApp Number (+91)" required>
-        <input type="text" id="bookTest" placeholder="Required Test (e.g. CBC, KFT)" required>
+        
+        <div style="position: relative;">
+          <input type="text" id="bookTest" placeholder="Required Test (Type to search suggestions...)" onkeyup="showTestSuggestions()" required autocomplete="off">
+          <div id="suggestionsBox" class="suggestions-box"></div>
+        </div>
         
         <label for="bookDateTime">Preferred Date & Time (Hours: 8:00 AM - 6:00 PM):</label>
         <input type="datetime-local" id="bookDateTime" required>
@@ -470,7 +493,10 @@
   window.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem('alshifa_user');
     if (saved) {
-      document.getElementById('userGreeting').innerText = `👋 ${JSON.parse(saved).name}`;
+      const u = JSON.parse(saved);
+      document.getElementById('userGreeting').innerText = `👋 ${u.name}`;
+      document.getElementById('bookName').value = u.name || '';
+      document.getElementById('bookPhone').value = u.phone || '';
     } else {
       setTimeout(() => document.getElementById('authModal').classList.add('active'), 3000);
     }
@@ -481,7 +507,6 @@
   function closeModal(id) { document.getElementById(id).classList.remove('active'); }
   function openAdminModal() { document.getElementById('adminModal').classList.add('active'); }
 
-  // Check Open/Closed Status
   function checkLabOperatingStatus() {
     const now = new Date();
     const hours = now.getHours();
@@ -496,7 +521,6 @@
     }
   }
 
-  // Render Tests Grid Dynamically
   function getStoredTests() {
     return JSON.parse(localStorage.getItem('alshifa_custom_tests')) || defaultTests;
   }
@@ -527,7 +551,36 @@
     `).join('');
   }
 
-  // Admin Edit & Delete Operations
+  // Live Auto Suggestions in Appointment Input
+  function showTestSuggestions() {
+    const query = document.getElementById('bookTest').value.toLowerCase();
+    const box = document.getElementById('suggestionsBox');
+    const tests = getStoredTests();
+
+    if (!query) {
+      box.style.display = 'none';
+      return;
+    }
+
+    const matches = tests.filter(t => t.title.toLowerCase().includes(query) || t.desc.toLowerCase().includes(query));
+    if (matches.length > 0) {
+      box.innerHTML = matches.map(m => `
+        <div class="suggestion-item" onclick="selectSuggestion('${m.title}')">
+          <strong>${m.title}</strong> — ₹${m.price}
+        </div>
+      `).join('');
+      box.style.display = 'block';
+    } else {
+      box.style.display = 'none';
+    }
+  }
+
+  function selectSuggestion(title) {
+    document.getElementById('bookTest').value = title;
+    document.getElementById('suggestionsBox').style.display = 'none';
+    document.getElementById('bookDateTime').focus();
+  }
+
   function editTestItem(id) {
     let tests = getStoredTests();
     const index = tests.findIndex(t => t.id === id);
@@ -572,9 +625,13 @@
     document.getElementById('newTestPrice').value = '';
   }
 
+  // Quick Book Shortcut from Recommended Cards
   function quickBook(testName) {
     document.getElementById('bookTest').value = testName;
     document.getElementById('appointment').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      document.getElementById('bookDateTime').focus();
+    }, 400);
   }
 
   function filterTests() {
@@ -595,6 +652,8 @@
       await window.addDoc(window.collection(window.db, "patients"), { name, phone, date: new Date().toISOString() });
       localStorage.setItem('alshifa_user', JSON.stringify({ name, phone }));
       document.getElementById('userGreeting').innerText = `👋 ${name}`;
+      document.getElementById('bookName').value = name;
+      document.getElementById('bookPhone').value = phone;
       closeModal('authModal');
       alert(`Welcome ${name}! Profile saved.`);
     } catch (err) {
@@ -602,7 +661,8 @@
     }
   }
 
-  function submitFirebaseBooking(e) {
+  // Submit Booking & Redirect to WhatsApp
+  async function submitFirebaseBooking(e) {
     e.preventDefault();
 
     const name = document.getElementById('bookName').value;
@@ -631,26 +691,36 @@
       timeStyle: 'short'
     });
 
-    window.addDoc(window.collection(window.db, "bookings"), { 
-      name, phone, test, preferredDateTime: formattedDateTime, createdAt: new Date().toISOString() 
-    }).catch(err => console.error("Firebase error:", err));
+    try {
+      // 1. Save directly to Cloud Database for Admin Console Visibility
+      await window.addDoc(window.collection(window.db, "bookings"), { 
+        name, phone, test, preferredDateTime: formattedDateTime, createdAt: new Date().toISOString() 
+      });
 
-    const textMessage = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*%0A%0A` +
-                        `👤 *Patient Name:* ${encodeURIComponent(name)}%0A` +
-                        `📞 *Contact Number:* ${encodeURIComponent(phone)}%0A` +
-                        `🔬 *Requested Test:* ${encodeURIComponent(test)}%0A` +
-                        `⏰ *Preferred Date & Time:* ${encodeURIComponent(formattedDateTime)}%0A%0A` +
-                        `_Sent via Al Shifa Lab Website_`;
+      // 2. Format WhatsApp Message
+      const textMessage = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*%0A%0A` +
+                          `👤 *Patient Name:* ${encodeURIComponent(name)}%0A` +
+                          `📞 *Contact Number:* ${encodeURIComponent(phone)}%0A` +
+                          `🔬 *Requested Test:* ${encodeURIComponent(test)}%0A` +
+                          `⏰ *Preferred Date & Time:* ${encodeURIComponent(formattedDateTime)}%0A%0A` +
+                          `_Sent via Al Shifa Lab Website_`;
 
-    const whatsappUrl = `https://wa.me/917780912275?text=${textMessage}`;
+      const whatsappUrl = `https://wa.me/917780912275?text=${textMessage}`;
 
-    document.getElementById('bookName').value = '';
-    document.getElementById('bookPhone').value = '';
-    document.getElementById('bookTest').value = '';
-    document.getElementById('bookDateTime').value = '';
-    btn.innerText = "Submit Booking & Send to WhatsApp";
+      // Reset Form
+      document.getElementById('bookName').value = '';
+      document.getElementById('bookPhone').value = '';
+      document.getElementById('bookTest').value = '';
+      document.getElementById('bookDateTime').value = '';
+      btn.innerText = "Submit Booking & Send to WhatsApp";
 
-    window.location.href = whatsappUrl;
+      // 3. Open WhatsApp Automatically
+      window.location.href = whatsappUrl;
+
+    } catch (err) {
+      alert("Error saving booking: " + err.message);
+      btn.innerText = "Submit Booking & Send to WhatsApp";
+    }
   }
 
   async function handleFirebaseAdminLogin(e) {
@@ -681,10 +751,10 @@
       bTable.innerHTML = bookingsSnap.empty ? '<tr><td colspan="4">No test bookings.</td></tr>' : '';
       bookingsSnap.forEach(doc => {
         const d = doc.data();
-        bTable.innerHTML += `<tr><td>${d.name}</td><td>${d.phone}</td><td>${d.test}</td><td>${d.preferredDateTime || 'N/A'}</td></tr>`;
+        bTable.innerHTML += `<tr><td>${d.name || 'Patient'}</td><td>${d.phone || 'N/A'}</td><td>${d.test || 'General Test'}</td><td>${d.preferredDateTime || 'N/A'}</td></tr>`;
       });
     } catch (err) {
-      console.error(err);
+      console.error("Admin data load error:", err);
     }
   }
 
