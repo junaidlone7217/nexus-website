@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Al Shifa Diagnostic Lab</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 <style>
   :root {
     --accent: #0284c7;
@@ -30,7 +31,7 @@
     background: rgba(2, 132, 199, 0.2);
     border-bottom: 1px solid rgba(56, 189, 248, 0.2);
     padding: 0.5rem 5vw;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -38,367 +39,257 @@
     z-index: 101;
     position: relative;
   }
-  .top-bar-info { display: flex; gap: 1.5rem; }
   .phone-link { color: var(--accent2); text-decoration: none; font-weight: 700; }
 
-  /* 3D Canvas Background */
+  /* 3D Background Canvas */
   #bg-canvas {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
     z-index: -1;
     pointer-events: none;
+    opacity: 0.7;
   }
 
-  /* Navbar */
+  /* Navigation Bar */
   nav {
     position: sticky;
     top: 0; width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.1rem 5vw;
+    padding: 1rem 5vw;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    background: rgba(3, 7, 18, 0.8);
+    background: rgba(3, 7, 18, 0.85);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     z-index: 100;
   }
 
   .logo {
-    font-size: 1.4rem;
-    font-weight: 800;
-    letter-spacing: 0.5px;
+    font-size: 1.2rem; font-weight: 800;
     background: linear-gradient(90deg, #38bdf8, #818cf8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    white-space: nowrap;
   }
 
-  .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
-  .nav-links a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: color 0.3s;
-  }
-  .nav-links a:hover { color: #fff; }
+  .nav-links { display: flex; gap: 1rem; list-style: none; align-items: center; }
+  .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
 
   .admin-btn {
     background: rgba(225, 29, 72, 0.2);
     border: 1px solid rgba(225, 29, 72, 0.4);
     color: #f43f5e;
-    padding: 0.4rem 0.9rem;
+    padding: 0.35rem 0.8rem;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 600;
     cursor: pointer;
+    white-space: nowrap;
   }
 
-  .menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 1.8rem;
-    cursor: pointer;
-  }
-
-  /* Hero */
+  /* Hero Section */
   .hero {
-    min-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 4rem 6vw 2rem;
-  }
-  .hero-badge {
-    background: rgba(56, 189, 248, 0.15);
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    color: var(--accent2);
-    padding: 0.4rem 1.2rem;
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 1.2rem;
+    min-height: 75vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 3rem 6vw 2rem;
   }
   .hero h1 {
-    font-size: clamp(2.2rem, 5.5vw, 4.5rem);
-    font-weight: 900;
-    line-height: 1.15;
+    font-size: clamp(2rem, 5vw, 4rem); font-weight: 900;
+    line-height: 1.25;
     background: linear-gradient(120deg, #fff 40%, var(--accent2));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    margin-bottom: 0.8rem;
   }
   .hero p {
-    margin: 1.2rem 0 2rem;
-    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    font-size: clamp(0.9rem, 1.4vw, 1.1rem);
     color: var(--text-secondary);
-    max-width: 650px;
+    max-width: 600px;
+    margin-bottom: 1.8rem;
   }
-  .cta-group {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+
   .cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.85rem 2rem;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: #fff;
-    text-decoration: none;
+    display: inline-flex; padding: 0.85rem 2rem; border-radius: 50px;
+    font-weight: 600; font-size: 0.95rem; color: #fff; text-decoration: none;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
-    box-shadow: 0 8px 25px rgba(56, 189, 248, 0.25);
-    transition: transform 0.3s, box-shadow 0.3s;
-    border: none;
-    cursor: pointer;
-  }
-  .cta-whatsapp { background: #25d366; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3); }
-
-  /* Sections */
-  section { padding: 5rem 6vw; position: relative; }
-  .section-title {
-    font-size: clamp(1.8rem, 3vw, 2.5rem);
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-  .section-title span {
-    background: linear-gradient(90deg, var(--accent2), #818cf8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  /* Cards */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.8rem;
-    max-width: 1150px;
-    margin: 0 auto;
-  }
-  .card {
-    background: var(--glass);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    padding: 2rem;
-    backdrop-filter: blur(12px);
+    border: none; cursor: pointer;
+    box-shadow: 0 8px 25px rgba(56, 189, 248, 0.3);
   }
 
   /* Modals Overlay */
   .modal-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(12px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s ease;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
   }
   .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
   .modal-card {
-    background: #090d16;
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    border-radius: 24px;
-    padding: 2.5rem 2rem;
-    width: 90%;
-    max-width: 480px;
-    position: relative;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-    text-align: center;
+    background: #090d16; border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 20px; padding: 2rem 1.5rem; width: 90%; max-width: 480px;
+    position: relative; text-align: center;
   }
-  .modal-close {
-    position: absolute;
-    top: 15px; right: 20px;
-    font-size: 1.5rem; color: #9ca3af;
-    cursor: pointer; background: none; border: none;
-  }
+  .modal-close { position: absolute; top: 12px; right: 16px; font-size: 1.4rem; color: #9ca3af; cursor: pointer; background: none; border: none; }
 
-  .modal-card h3 { font-size: 1.5rem; margin-bottom: 0.4rem; color: #fff; }
-  .modal-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
-
-  .auth-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+  .auth-form { display: flex; flex-direction: column; gap: 0.9rem; text-align: left; margin-top: 1rem; }
   .auth-form input {
-    width: 100%; padding: 0.82rem 1rem; border-radius: 10px;
+    width: 100%; padding: 0.8rem 1rem; border-radius: 10px;
     background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff; font-size: 0.95rem;
+    color: #fff; font-size: 0.9rem;
   }
 
-  /* Admin Modal Specifics */
   .admin-modal { max-width: 750px; text-align: left; }
-  .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-  .admin-stat-card {
-    background: rgba(255, 255, 255, 0.04); padding: 1.2rem;
-    border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .admin-stat-card h4 { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
-  .admin-stat-card div { font-size: 1.6rem; font-weight: 800; color: var(--accent2); }
-
   .admin-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
   .admin-table th, .admin-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
   .admin-table th { color: var(--accent2); }
 
   footer {
-    text-align: center;
-    padding: 2.5rem 2rem;
-    color: #6b7280;
-    font-size: 0.85rem;
+    text-align: center; padding: 2rem;
+    color: #6b7280; font-size: 0.85rem;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 
-  @media (max-width: 768px) {
-    .top-bar-info { display: none; }
-    .menu-toggle { display: block; }
-    .nav-links {
-      position: absolute; top: 100%; left: 0; width: 100%;
-      flex-direction: column; background: rgba(3, 7, 18, 0.98);
-      padding: 1.5rem 2rem; gap: 1.2rem; display: none;
-    }
-    .nav-links.active { display: flex; }
+  @media (max-width: 600px) {
+    .top-bar { font-size: 0.72rem; flex-direction: column; gap: 4px; text-align: center; }
+    nav { padding: 0.8rem 4vw; }
+    .logo { font-size: 0.95rem; }
+    .nav-links { gap: 0.5rem; }
   }
 </style>
+
+<!-- Firebase SDK Integration -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // Your Official Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAKtoKn06cqEWKFCxF86CE9rpe9Zbe9XH0",
+    authDomain: "al-shifa-lab.firebaseapp.com",
+    projectId: "al-shifa-lab",
+    storageBucket: "al-shifa-lab.firebasestorage.app",
+    messagingSenderId: "678342058987",
+    appId: "1:678342058987:web:6ac47606b243b242622fae"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  window.db = db;
+  window.auth = auth;
+  window.collection = collection;
+  window.addDoc = addDoc;
+  window.getDocs = getDocs;
+  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+  window.signOut = signOut;
+
+  // Authentication State Listener
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById('adminAuthStep').style.display = 'none';
+      document.getElementById('adminContentStep').style.display = 'block';
+      loadFirebaseAdminData();
+    } else {
+      document.getElementById('adminAuthStep').style.display = 'block';
+      document.getElementById('adminContentStep').style.display = 'none';
+    }
+  });
+</script>
 </head>
 <body>
 
-<!-- Top Info Bar -->
 <div class="top-bar">
-  <div class="top-bar-info">
-    <span>🕒 Mon - Sat: 7:00 AM - 8:00 PM | Sun: 8:00 AM - 2:00 PM</span>
-  </div>
-  <div>
-    <span>📞 Call / WhatsApp: <a href="tel:+917780912275" class="phone-link">+91 77809 12275</a></span>
-  </div>
+  <div>🕒 Mon - Sat: 7:00 AM - 8:00 PM</div>
+  <div>📞 Call / WhatsApp: <a href="tel:+917780912275" class="phone-link">+91 77809 12275</a></div>
 </div>
 
 <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-<nav aria-label="Main Navigation">
+<nav>
   <a href="#" class="logo">🔬 Al Shifa Diagnostic Lab</a>
-  <button class="menu-toggle" id="menuToggle">☰</button>
-  <ul class="nav-links" id="navLinks">
-    <li><span id="userGreeting" style="color: var(--accent2); font-weight: 600; font-size: 0.85rem;"></span></li>
-    <li><a href="#services">Services</a></li>
+  <ul class="nav-links">
+    <li><span id="userGreeting" style="color: var(--accent2); font-weight: 600; font-size: 0.8rem;"></span></li>
     <li><a href="#appointment">Book Test</a></li>
-    <li><button class="admin-btn" onclick="openAdminLogin()">🔒 Admin Panel</button></li>
+    <li><button class="admin-btn" onclick="openAdminModal()">🔒 Admin Login</button></li>
   </ul>
 </nav>
 
 <header class="hero">
-  <div class="hero-badge">✨ Trusted Pathology & Blood Testing Center</div>
-  <h1>Accurate Lab Testing.<br>Fast Digital Reports.</h1>
-  <p>Al Shifa Diagnostic Lab provides high-precision pathology tests, blood analysis, and home sample collection services.</p>
-  <div class="cta-group">
-    <a href="#appointment" class="cta">Book Lab Test →</a>
-    <a href="https://wa.me/917780912275?text=Hello%20Al%20Shifa%20Lab," class="cta cta-whatsapp" target="_blank">Chat on WhatsApp</a>
-  </div>
+  <h1>Accurate Lab Testing.<br>Cloud Powered Reports.</h1>
+  <p>Al Shifa Diagnostic Lab — Owner: Aadil Ramzan Lone (+91 7780912275)</p>
+  <a href="#appointment" class="cta">Book Lab Test →</a>
 </header>
 
-<!-- Services -->
-<section id="services">
-  <h2 class="section-title">Laboratory <span>Services</span></h2>
-  <div class="cards">
-    <article class="card">
-      <span style="font-size:2rem;">🩸</span>
-      <h3>Pathology Lab</h3>
-      <p>Complete blood counts, hemoglobin, blood grouping, and infection screenings.</p>
-    </article>
-    <article class="card">
-      <span style="font-size:2rem;">🧪</span>
-      <h3>Biochemistry Tests</h3>
-      <p>Kidney function (KFT), Liver function (LFT), Lipid profile, and Blood Sugar testing.</p>
-    </article>
-  </div>
-</section>
-
-<!-- Appointment Form -->
+<!-- Patient Booking Section -->
 <section id="appointment">
-  <div style="max-width: 650px; margin: 0 auto; background: rgba(2, 132, 199, 0.1); padding: 2.5rem; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1);">
-    <h2 style="text-align: center; margin-bottom: 1rem;">Book Test Appointment</h2>
-    <form class="auth-form" onsubmit="handleBooking(event)">
+  <div style="max-width: 550px; margin: 0 auto; background: rgba(2, 132, 199, 0.1); padding: 2rem 1.5rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+    <h2 style="text-align: center; margin-bottom: 1rem; font-size: 1.4rem;">Book Test Appointment</h2>
+    <form class="auth-form" onsubmit="submitFirebaseBooking(event)">
       <input type="text" id="bookName" placeholder="Patient Full Name" required>
-      <input type="tel" id="bookPhone" placeholder="Mobile / WhatsApp Number" required>
-      <input type="text" id="bookTest" placeholder="Required Test (e.g. CBC, Blood Sugar)" required>
-      <button type="submit" class="cta" style="width: 100%; margin-top: 0.5rem;">Submit Booking</button>
+      <input type="tel" id="bookPhone" placeholder="Mobile / WhatsApp Number (+91)" required>
+      <input type="text" id="bookTest" placeholder="Required Test (e.g. CBC, Lipid Profile)" required>
+      <button type="submit" class="cta" style="width: 100%;">Submit Booking to Cloud</button>
     </form>
   </div>
 </section>
 
-<!-- 1. USER LOGIN / SIGNUP POPUP (3 Sec Trigger) -->
+<!-- 1. PATIENT POPUP (3 Sec Auto Trigger) -->
 <div class="modal-overlay" id="authModal">
   <div class="modal-card">
-    <button class="modal-close" onclick="closeAuthModal()">✕</button>
+    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
     <h3>Welcome to Al Shifa Lab</h3>
-    <p>Sign up or login to manage your lab bookings and access digital reports.</p>
-    <form class="auth-form" onsubmit="handleUserRegister(event)">
-      <input type="text" id="userNameInput" placeholder="Your Full Name" required>
+    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.3rem;">Sign up to manage your lab bookings and digital reports.</p>
+    <form class="auth-form" onsubmit="savePatientToFirebase(event)">
+      <input type="text" id="userNameInput" placeholder="Full Name" required>
       <input type="tel" id="userPhoneInput" placeholder="Mobile Number (+91)" required>
-      <button type="submit" class="cta" style="width: 100%;">Continue to Website</button>
+      <button type="submit" class="cta">Continue to Website</button>
     </form>
   </div>
 </div>
 
-<!-- 2. EXCLUSIVE ADMIN PANEL MODAL -->
+<!-- 2. SECURE FIREBASE ADMIN PANEL MODAL -->
 <div class="modal-overlay" id="adminModal">
   <div class="modal-card admin-modal">
-    <button class="modal-close" onclick="closeAdminModal()">✕</button>
+    <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
     
-    <!-- Secret Login Step -->
+    <!-- Admin Cloud Login -->
     <div id="adminAuthStep">
-      <h3>Owner Dashboard Login</h3>
-      <p>Enter secret PIN to access Al Shifa Lab Admin Panel.</p>
-      <form class="auth-form" onsubmit="handleAdminLogin(event)">
-        <input type="password" id="adminPinInput" placeholder="Enter Secret Admin PIN (Default: 77809)" required>
-        <button type="submit" class="cta" style="width: 100%;">Unlock Admin Panel</button>
+      <h3>Owner Cloud Login</h3>
+      <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.3rem;">Log in with your registered Firebase Admin email.</p>
+      <form class="auth-form" onsubmit="handleFirebaseAdminLogin(event)">
+        <input type="email" id="adminEmail" placeholder="Admin Email" required>
+        <input type="password" id="adminPassword" placeholder="Admin Password" required>
+        <button type="submit" class="cta">Log In to Dashboard</button>
       </form>
     </div>
 
-    <!-- Admin Panel Content Step -->
+    <!-- Live Firebase Admin Dashboard -->
     <div id="adminContentStep" style="display: none;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h3>👑 Al Shifa Admin Dashboard</h3>
-        <span style="font-size: 0.8rem; color: #22c55e;">● Owner: Aadil Ramzan Lone</span>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <h3>👑 Live Cloud Dashboard</h3>
+        <button class="admin-btn" onclick="window.signOut(window.auth)">Log Out</button>
       </div>
 
-      <div class="admin-stats">
-        <div class="admin-stat-card">
-          <h4>Total Registered Users</h4>
-          <div id="statTotalUsers">0</div>
-        </div>
-        <div class="admin-stat-card">
-          <h4>Recent Bookings</h4>
-          <div id="statTotalBookings">0</div>
-        </div>
-      </div>
-
-      <h4>Recent Patient Booking Requests:</h4>
-      <div style="overflow-x: auto;">
+      <h4 style="margin-top: 1.2rem; color: var(--accent2);">Cloud Registered Patients:</h4>
+      <div style="overflow-x: auto; max-height: 180px;">
         <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Patient</th>
-              <th>Phone</th>
-              <th>Requested Test</th>
-            </tr>
-          </thead>
-          <tbody id="adminBookingsTable">
-            <tr><td colspan="3" style="color: var(--text-secondary);">No bookings recorded yet.</td></tr>
-          </tbody>
+          <thead><tr><th>Name</th><th>Phone</th></tr></thead>
+          <tbody id="firebaseUsersTable"><tr><td colspan="2">Loading cloud data...</td></tr></tbody>
+        </table>
+      </div>
+
+      <h4 style="margin-top: 1.2rem; color: var(--accent2);">Recent Test Bookings:</h4>
+      <div style="overflow-x: auto; max-height: 180px;">
+        <table class="admin-table">
+          <thead><tr><th>Patient</th><th>Phone</th><th>Test</th></tr></thead>
+          <tbody id="firebaseBookingsTable"><tr><td colspan="3">Loading cloud data...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -411,103 +302,91 @@
 </footer>
 
 <script>
-  // ===== User Session & 3-Second Popup Logic =====
   window.addEventListener('DOMContentLoaded', () => {
-    const savedUser = localStorage.getItem('alshifa_user');
-    if (savedUser) {
-      const user = JSON.parse(savedUser);
-      document.getElementById('userGreeting').innerText = `👋 Welcome, ${user.name}`;
+    const saved = localStorage.getItem('alshifa_user');
+    if (saved) {
+      document.getElementById('userGreeting').innerText = `👋 ${JSON.parse(saved).name}`;
     } else {
-      // Trigger popup after 3 seconds if not previously registered
-      setTimeout(() => {
-        document.getElementById('authModal').classList.add('active');
-      }, 3000);
+      setTimeout(() => document.getElementById('authModal').classList.add('active'), 3000);
     }
   });
 
-  function closeAuthModal() {
-    document.getElementById('authModal').classList.remove('active');
-  }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+  function openAdminModal() { document.getElementById('adminModal').classList.add('active'); }
 
-  function handleUserRegister(e) {
+  // Save patient registration to Firebase Firestore
+  async function savePatientToFirebase(e) {
     e.preventDefault();
     const name = document.getElementById('userNameInput').value;
     const phone = document.getElementById('userPhoneInput').value;
 
-    const userData = { name, phone, registeredAt: new Date().toLocaleDateString() };
-    localStorage.setItem('alshifa_user', JSON.stringify(userData));
-
-    // Save to global users list for Admin
-    let usersList = JSON.parse(localStorage.getItem('alshifa_all_users') || '[]');
-    usersList.push(userData);
-    localStorage.setItem('alshifa_all_users', JSON.stringify(usersList));
-
-    document.getElementById('userGreeting').innerText = `👋 Welcome, ${name}`;
-    closeAuthModal();
-    alert(`Welcome ${name}! Your account is now active on Al Shifa Lab.`);
+    try {
+      await window.addDoc(window.collection(window.db, "patients"), { name, phone, date: new Date().toISOString() });
+      localStorage.setItem('alshifa_user', JSON.stringify({ name, phone }));
+      document.getElementById('userGreeting').innerText = `👋 ${name}`;
+      closeModal('authModal');
+      alert(`Welcome ${name}! Your profile is now saved.`);
+    } catch (err) {
+      alert("Error saving data: " + err.message);
+    }
   }
 
-  // ===== Booking Logic =====
-  function handleBooking(e) {
+  // Save test booking to Firebase Firestore
+  async function submitFirebaseBooking(e) {
     e.preventDefault();
     const name = document.getElementById('bookName').value;
     const phone = document.getElementById('bookPhone').value;
     const test = document.getElementById('bookTest').value;
 
-    const bookingData = { name, phone, test };
-    let bookingsList = JSON.parse(localStorage.getItem('alshifa_bookings') || '[]');
-    bookingsList.push(bookingData);
-    localStorage.setItem('alshifa_bookings', JSON.stringify(bookingsList));
-
-    alert('Booking submitted! The Al Shifa Lab team will contact you shortly.');
-    document.getElementById('bookName').value = '';
-    document.getElementById('bookPhone').value = '';
-    document.getElementById('bookTest').value = '';
+    try {
+      await window.addDoc(window.collection(window.db, "bookings"), { name, phone, test, date: new Date().toISOString() });
+      alert("Booking saved to Cloud! The Al Shifa team will call you shortly.");
+      document.getElementById('bookName').value = '';
+      document.getElementById('bookPhone').value = '';
+      document.getElementById('bookTest').value = '';
+    } catch (err) {
+      alert("Error submitting booking: " + err.message);
+    }
   }
 
-  // ===== Exclusive Admin Panel Logic =====
-  function openAdminLogin() {
-    document.getElementById('adminModal').classList.add('active');
-  }
-
-  function closeAdminModal() {
-    document.getElementById('adminModal').classList.remove('active');
-  }
-
-  function handleAdminLogin(e) {
+  // Authenticate Admin via Firebase
+  async function handleFirebaseAdminLogin(e) {
     e.preventDefault();
-    const pin = document.getElementById('adminPinInput').value;
+    const email = document.getElementById('adminEmail').value;
+    const password = document.getElementById('adminPassword').value;
 
-    // Secret Admin PIN check (Default: 77809)
-    if (pin === '77809') {
-      document.getElementById('adminAuthStep').style.display = 'none';
-      document.getElementById('adminContentStep').style.display = 'block';
-      loadAdminData();
-    } else {
-      alert('Incorrect Secret PIN! Access Denied.');
+    try {
+      await window.signInWithEmailAndPassword(window.auth, email, password);
+    } catch (err) {
+      alert("Login Failed: " + err.message);
     }
   }
 
-  function loadAdminData() {
-    const users = JSON.parse(localStorage.getItem('alshifa_all_users') || '[]');
-    const bookings = JSON.parse(localStorage.getItem('alshifa_bookings') || '[]');
+  // Load Real-time Data from Firestore
+  async function loadFirebaseAdminData() {
+    try {
+      const usersSnap = await window.getDocs(window.collection(window.db, "patients"));
+      const bookingsSnap = await window.getDocs(window.collection(window.db, "bookings"));
 
-    document.getElementById('statTotalUsers').innerText = users.length;
-    document.getElementById('statTotalBookings').innerText = bookings.length;
+      const uTable = document.getElementById('firebaseUsersTable');
+      uTable.innerHTML = usersSnap.empty ? '<tr><td colspan="2">No registered patients.</td></tr>' : '';
+      usersSnap.forEach(doc => {
+        const d = doc.data();
+        uTable.innerHTML += `<tr><td>${d.name}</td><td>${d.phone}</td></tr>`;
+      });
 
-    const tableBody = document.getElementById('adminBookingsTable');
-    if (bookings.length > 0) {
-      tableBody.innerHTML = bookings.map(b => `
-        <tr>
-          <td>${b.name}</td>
-          <td>${b.phone}</td>
-          <td>${b.test}</td>
-        </tr>
-      `).join('');
+      const bTable = document.getElementById('firebaseBookingsTable');
+      bTable.innerHTML = bookingsSnap.empty ? '<tr><td colspan="3">No test bookings.</td></tr>' : '';
+      bookingsSnap.forEach(doc => {
+        const d = doc.data();
+        bTable.innerHTML += `<tr><td>${d.name}</td><td>${d.phone}</td><td>${d.test}</td></tr>`;
+      });
+    } catch (err) {
+      console.error(err);
     }
   }
 
-  // ===== Three.js Animated DNA Background =====
+  // ===== PRESERVED 3D DNA DOUBLE-HELIX BACKGROUND ANIMATION =====
   const canvas = document.getElementById('bg-canvas');
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -517,33 +396,73 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+  // Build DNA Helix Structure
   const dnaGroup = new THREE.Group();
+  const strandPoints = 35;
+  const radius = 9;
+  const heightStep = 1.8;
+
   const sphereGeo = new THREE.SphereGeometry(0.7, 8, 8);
   const matBlue = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
+  const matCyan = new THREE.MeshBasicMaterial({ color: 0x0284c7 });
 
-  for (let i = -30; i < 30; i++) {
+  for (let i = -strandPoints; i < strandPoints; i++) {
     const angle = i * 0.25;
-    const y = i * 1.8;
+    const y = i * heightStep;
 
-    const x1 = Math.cos(angle) * 9;
-    const z1 = Math.sin(angle) * 9;
+    // Strand 1
+    const x1 = Math.cos(angle) * radius;
+    const z1 = Math.sin(angle) * radius;
     const p1 = new THREE.Mesh(sphereGeo, matBlue);
     p1.position.set(x1, y, z1);
     dnaGroup.add(p1);
+
+    // Strand 2
+    const x2 = Math.cos(angle + Math.PI) * radius;
+    const z2 = Math.sin(angle + Math.PI) * radius;
+    const p2 = new THREE.Mesh(sphereGeo, matCyan);
+    p2.position.set(x2, y, z2);
+    dnaGroup.add(p2);
+
+    // Connected Rungs
+    if (i % 2 === 0) {
+      const lineGeo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(x1, y, z1),
+        new THREE.Vector3(x2, y, z2)
+      ]);
+      const lineMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.35 });
+      const line = new THREE.Line(lineGeo, lineMat);
+      dnaGroup.add(line);
+    }
   }
+
   dnaGroup.rotation.z = 0.3;
   scene.add(dnaGroup);
+
+  // Background Particle Field
+  const pCount = 800;
+  const pGeo = new THREE.BufferGeometry();
+  const pPos = new Float32Array(pCount * 3);
+  for (let i = 0; i < pCount * 3; i++) pPos[i] = (Math.random() - 0.5) * 160;
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+
+  const pMat = new THREE.PointsMaterial({ size: 0.5, color: 0x38bdf8, transparent: true, opacity: 0.4 });
+  const particles = new THREE.Points(pGeo, pMat);
+  scene.add(particles);
 
   function animate() {
     requestAnimationFrame(animate);
     dnaGroup.rotation.y += 0.008;
+    particles.rotation.y += 0.0003;
     renderer.render(scene, camera);
   }
   animate();
 
-  const menuToggle = document.getElementById('menuToggle');
-  const navLinks = document.getElementById('navLinks');
-  menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
 </script>
 </body>
 </html>
