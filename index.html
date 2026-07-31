@@ -106,6 +106,7 @@
     white-space: nowrap;
     transition: all 0.3s ease;
   }
+  .admin-btn:hover { background: rgba(225, 29, 72, 0.4); }
 
   .hero {
     min-height: 55vh;
@@ -159,7 +160,7 @@
     backdrop-filter: blur(10px);
   }
 
-  /* Test Cards & Modern Admin Controls Bar */
+  /* Test Cards */
   .test-grid {
     max-width: 1000px;
     margin: 0 auto;
@@ -225,7 +226,6 @@
   }
   .book-test-btn:hover { background: rgba(56, 189, 248, 0.3); }
 
-  /* Suggestions Dropdown */
   .suggestions-box {
     background: rgba(9, 13, 22, 0.95);
     border: 1px solid rgba(56, 189, 248, 0.3);
@@ -247,7 +247,7 @@
   }
   .suggestion-item:hover { background: rgba(56, 189, 248, 0.2); }
 
-  /* Modals Overlay & Modern Glass Modals */
+  /* Modals Overlay */
   .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(14px);
@@ -399,7 +399,6 @@
       <input type="text" id="testSearchInput" class="search-input" placeholder="🔍 Search tests (e.g. CBC, KFT, Sugar)..." onkeyup="filterTests()">
     </div>
 
-    <!-- Dynamic Container rendered via JavaScript -->
     <div class="test-grid" id="publicTestGrid"></div>
   </section>
 
@@ -460,7 +459,7 @@
   </div>
 </div>
 
-<!-- MODERN GLASS ADMIN FULL-EDIT MODAL POPUP -->
+<!-- ADMIN FULL-EDIT MODAL POPUP -->
 <div class="modal-overlay" id="editTestModal">
   <div class="modal-card">
     <button class="modal-close" onclick="closeModal('editTestModal')">✕</button>
@@ -503,7 +502,6 @@
         <button class="admin-btn" onclick="window.handleAdminSignOut()">Log Out</button>
       </div>
 
-      <!-- Add New Test Feature -->
       <div style="margin-top: 1rem; background: rgba(255,255,255,0.03); padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
         <h4 style="color: var(--accent2); font-size: 0.9rem;">➕ Add New Custom Lab Test</h4>
         <form onsubmit="addNewCustomTest(event)" class="auth-form">
@@ -610,7 +608,6 @@
     `).join('');
   }
 
-  // INSTANT DIRECT BOOKING MODAL HANDLER
   function openInstantBooking(testName) {
     document.getElementById('instantTestTitle').innerText = "Book: " + testName;
     document.getElementById('instantTestName').value = testName;
@@ -625,7 +622,8 @@
     document.getElementById('instantBookingModal').classList.add('active');
   }
 
-  async function submitInstantBooking(e) {
+  // FIXED RELIABLE WHATSAPP DIRECT REDIRECT
+  function submitInstantBooking(e) {
     e.preventDefault();
     const test = document.getElementById('instantTestName').value;
     const name = document.getElementById('instantName').value;
@@ -647,24 +645,25 @@
 
     const formattedDateTime = selectedDate.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
 
-    try {
-      await window.addDoc(window.collection(window.db, "bookings"), { 
-        name, phone, test, preferredDateTime: formattedDateTime, createdAt: new Date().toISOString() 
-      });
+    // 1. Fire-and-forget save to Firebase
+    window.addDoc(window.collection(window.db, "bookings"), { 
+      name, phone, test, preferredDateTime: formattedDateTime, createdAt: new Date().toISOString() 
+    }).catch(err => console.error("Firebase save error:", err));
 
-      const textMessage = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*%0A%0A` +
-                          `👤 *Patient Name:* ${encodeURIComponent(name)}%0A` +
-                          `📞 *Contact Number:* ${encodeURIComponent(phone)}%0A` +
-                          `🔬 *Requested Test:* ${encodeURIComponent(test)}%0A` +
-                          `⏰ *Preferred Date & Time:* ${encodeURIComponent(formattedDateTime)}%0A%0A` +
-                          `_Sent via Al Shifa Lab Website_`;
+    // 2. Build multi-compatible WhatsApp URL
+    const textMessage = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*%0A%0A` +
+                        `👤 *Patient Name:* ${encodeURIComponent(name)}%0A` +
+                        `📞 *Contact Number:* ${encodeURIComponent(phone)}%0A` +
+                        `🔬 *Requested Test:* ${encodeURIComponent(test)}%0A` +
+                        `⏰ *Preferred Date & Time:* ${encodeURIComponent(formattedDateTime)}%0A%0A` +
+                        `_Sent via Al Shifa Lab Website_`;
 
-      const whatsappUrl = `https://wa.me/917780912275?text=${textMessage}`;
-      closeModal('instantBookingModal');
-      window.location.href = whatsappUrl;
-    } catch (err) {
-      alert("Error saving booking: " + err.message);
-    }
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=917780912275&text=${textMessage}`;
+
+    closeModal('instantBookingModal');
+
+    // 3. Direct synchronous browser navigation (Bypasses mobile popup blockers)
+    window.location.href = whatsappUrl;
   }
 
   function showTestSuggestions() {
@@ -788,7 +787,7 @@
     }
   }
 
-  async function submitFirebaseBooking(e) {
+  function submitFirebaseBooking(e) {
     e.preventDefault();
 
     const name = document.getElementById('bookName').value;
@@ -809,37 +808,27 @@
       return;
     }
 
-    const btn = document.getElementById('submitBookingBtn');
-    btn.innerText = "Processing...";
-
     const formattedDateTime = selectedDate.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
 
-    try {
-      await window.addDoc(window.collection(window.db, "bookings"), { 
-        name, phone, test, preferredDateTime: formattedDateTime, createdAt: new Date().toISOString() 
-      });
+    window.addDoc(window.collection(window.db, "bookings"), { 
+      name, phone, test, preferredDateTime: formattedDateTime, createdAt: new Date().toISOString() 
+    }).catch(err => console.error("Firebase save error:", err));
 
-      const textMessage = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*%0A%0A` +
-                          `👤 *Patient Name:* ${encodeURIComponent(name)}%0A` +
-                          `📞 *Contact Number:* ${encodeURIComponent(phone)}%0A` +
-                          `🔬 *Requested Test:* ${encodeURIComponent(test)}%0A` +
-                          `⏰ *Preferred Date & Time:* ${encodeURIComponent(formattedDateTime)}%0A%0A` +
-                          `_Sent via Al Shifa Lab Website_`;
+    const textMessage = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*%0A%0A` +
+                        `👤 *Patient Name:* ${encodeURIComponent(name)}%0A` +
+                        `📞 *Contact Number:* ${encodeURIComponent(phone)}%0A` +
+                        `🔬 *Requested Test:* ${encodeURIComponent(test)}%0A` +
+                        `⏰ *Preferred Date & Time:* ${encodeURIComponent(formattedDateTime)}%0A%0A` +
+                        `_Sent via Al Shifa Lab Website_`;
 
-      const whatsappUrl = `https://wa.me/917780912275?text=${textMessage}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=917780912275&text=${textMessage}`;
 
-      document.getElementById('bookName').value = '';
-      document.getElementById('bookPhone').value = '';
-      document.getElementById('bookTest').value = '';
-      document.getElementById('bookDateTime').value = '';
-      btn.innerText = "Submit Booking & Send to WhatsApp";
+    document.getElementById('bookName').value = '';
+    document.getElementById('bookPhone').value = '';
+    document.getElementById('bookTest').value = '';
+    document.getElementById('bookDateTime').value = '';
 
-      window.location.href = whatsappUrl;
-
-    } catch (err) {
-      alert("Error saving booking: " + err.message);
-      btn.innerText = "Submit Booking & Send to WhatsApp";
-    }
+    window.location.href = whatsappUrl;
   }
 
   async function handleFirebaseAdminLogin(e) {
@@ -863,7 +852,7 @@
       uTable.innerHTML = usersSnap.empty ? '<tr><td colspan="3">No registered patients.</td></tr>' : '';
       usersSnap.forEach(doc => {
         const d = doc.data();
-        uTable.innerHTML += `<tr><td>${d.name}</td><td>${d.phone}</td><td><a href="https://wa.me/917780912275?text=Hello%20${encodeURIComponent(d.name)}" target="_blank" style="color:#22c55e;">Chat</a></td></tr>`;
+        uTable.innerHTML += `<tr><td>${d.name}</td><td>${d.phone}</td><td><a href="https://api.whatsapp.com/send?phone=917780912275&text=Hello%20${encodeURIComponent(d.name)}" target="_blank" style="color:#22c55e;">Chat</a></td></tr>`;
       });
 
       const bTable = document.getElementById('firebaseBookingsTable');
