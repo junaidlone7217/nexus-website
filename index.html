@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Al Shifa Diagnostic Lab</title>
+<title>Al Shifa Diagnostic Lab — Kreeri</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style>
@@ -92,7 +92,7 @@
 
   /* Hero Section */
   .hero {
-    min-height: 75vh;
+    min-height: 70vh;
     display: flex; flex-direction: column;
     justify-content: center; align-items: center;
     text-align: center; padding: 3rem 6vw 2rem;
@@ -120,6 +120,45 @@
     box-shadow: 0 8px 25px rgba(56, 189, 248, 0.3);
   }
 
+  /* Sections */
+  section { padding: 4rem 6vw; }
+  .section-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .section-title span { color: var(--accent2); }
+
+  /* Test Directory / Pricing Cards */
+  .test-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+  }
+  .test-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .test-card h4 { font-size: 1.1rem; color: var(--accent2); margin-bottom: 0.3rem; }
+  .test-card .desc { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1rem; }
+  .test-card .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 0.8rem;
+    font-size: 0.85rem;
+  }
+  .price { font-weight: 700; color: #38bdf8; font-size: 1.1rem; }
+
   /* Modals Overlay */
   .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -137,16 +176,18 @@
   .modal-close { position: absolute; top: 12px; right: 16px; font-size: 1.4rem; color: #9ca3af; cursor: pointer; background: none; border: none; }
 
   .auth-form { display: flex; flex-direction: column; gap: 0.9rem; text-align: left; margin-top: 1rem; }
-  .auth-form input {
+  .auth-form input, .auth-form select {
     width: 100%; padding: 0.8rem 1rem; border-radius: 10px;
     background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.15);
     color: #fff; font-size: 0.9rem;
   }
 
-  .admin-modal { max-width: 750px; text-align: left; }
-  .admin-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
-  .admin-table th, .admin-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .admin-modal { max-width: 800px; text-align: left; max-height: 85vh; overflow-y: auto; }
+  .admin-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.85rem; }
+  .admin-table th, .admin-table td { padding: 0.65rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
   .admin-table th { color: var(--accent2); }
+
+  .rate-edit-row { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
 
   footer {
     text-align: center; padding: 2rem;
@@ -166,9 +207,8 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  // Your Official Firebase Configuration
   const firebaseConfig = {
     apiKey: "AIzaSyAKtoKn06cqEWKFCxF86CE9rpe9Zbe9XH0",
     authDomain: "al-shifa-lab.firebaseapp.com",
@@ -187,10 +227,11 @@
   window.collection = collection;
   window.addDoc = addDoc;
   window.getDocs = getDocs;
+  window.doc = doc;
+  window.setDoc = setDoc;
   window.signInWithEmailAndPassword = signInWithEmailAndPassword;
   window.signOut = signOut;
 
-  // Authentication State Listener
   onAuthStateChanged(auth, (user) => {
     if (user) {
       document.getElementById('adminAuthStep').style.display = 'none';
@@ -206,7 +247,7 @@
 <body>
 
 <div class="top-bar">
-  <div>🕒 Mon - Sat: 7:00 AM - 8:00 PM</div>
+  <div>🕒 Mon - Sat: 7:00 AM - 8:00 PM | Sun: 8:00 AM - 2:00 PM</div>
   <div>📞 Call / WhatsApp: <a href="tel:+917780912275" class="phone-link">+91 77809 12275</a></div>
 </div>
 
@@ -216,16 +257,74 @@
   <a href="#" class="logo">🔬 Al Shifa Diagnostic Lab</a>
   <ul class="nav-links">
     <li><span id="userGreeting" style="color: var(--accent2); font-weight: 600; font-size: 0.8rem;"></span></li>
+    <li><a href="#rates">Rates</a></li>
     <li><a href="#appointment">Book Test</a></li>
-    <li><button class="admin-btn" onclick="openAdminModal()">🔒 Admin Login</button></li>
+    <li><button class="admin-btn" onclick="openAdminModal()">🔒 Admin Panel</button></li>
   </ul>
 </nav>
 
 <header class="hero">
   <h1>Accurate Lab Testing.<br>Cloud Powered Reports.</h1>
-  <p>Al Shifa Diagnostic Lab — Owner: Aadil Ramzan Lone (+91 7780912275)</p>
+  <p>Al Shifa Diagnostic Lab, Kreeri — Founder & Owner: Aadil Ramzan Lone (+91 7780912275)</p>
   <a href="#appointment" class="cta">Book Lab Test →</a>
 </header>
+
+<!-- Recommended Tests & Rate List -->
+<section id="rates">
+  <h2 class="section-title">Recommended <span>Lab Tests & Rates (₹ INR)</span></h2>
+  <div class="test-grid" id="publicTestGrid">
+    <div class="test-card">
+      <div>
+        <h4>Complete Blood Count (CBC)</h4>
+        <p class="desc">Screens for anemia, white cell counts, platelets & infections.</p>
+      </div>
+      <div class="meta">
+        <span>No Fasting Req.</span>
+        <span class="price" id="price-cbc">₹250</span>
+      </div>
+    </div>
+    <div class="test-card">
+      <div>
+        <h4>Blood Sugar Fasting / PP</h4>
+        <p class="desc">Evaluates glucose levels for diabetes assessment.</p>
+      </div>
+      <div class="meta">
+        <span>8-10 Hrs Fasting</span>
+        <span class="price" id="price-sugar">₹100</span>
+      </div>
+    </div>
+    <div class="test-card">
+      <div>
+        <h4>Lipid Profile (Heart Risk)</h4>
+        <p class="desc">Cholesterol (HDL, LDL), Triglycerides and Cardiac Risk ratio.</p>
+      </div>
+      <div class="meta">
+        <span>10-12 Hrs Fasting</span>
+        <span class="price" id="price-lipid">₹500</span>
+      </div>
+    </div>
+    <div class="test-card">
+      <div>
+        <h4>Thyroid Profile (T3, T4, TSH)</h4>
+        <p class="desc">Evaluates thyroid gland activity and metabolic function.</p>
+      </div>
+      <div class="meta">
+        <span>Morning Sample</span>
+        <span class="price" id="price-thyroid">₹450</span>
+      </div>
+    </div>
+    <div class="test-card">
+      <div>
+        <h4>Full Body Health Profile</h4>
+        <p class="desc">Includes CBC, KFT, LFT, Lipid Profile & Urine Test.</p>
+      </div>
+      <div class="meta">
+        <span>Complete Checkup</span>
+        <span class="price" id="price-fullbody">₹1,200</span>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- Patient Booking Section -->
 <section id="appointment">
@@ -235,7 +334,7 @@
       <input type="text" id="bookName" placeholder="Patient Full Name" required>
       <input type="tel" id="bookPhone" placeholder="Mobile / WhatsApp Number (+91)" required>
       <input type="text" id="bookTest" placeholder="Required Test (e.g. CBC, Lipid Profile)" required>
-      <button type="submit" class="cta" style="width: 100%;">Submit Booking to Cloud</button>
+      <button type="submit" class="cta" style="width: 100%;">Submit Booking</button>
     </form>
   </div>
 </section>
@@ -254,12 +353,12 @@
   </div>
 </div>
 
-<!-- 2. SECURE FIREBASE ADMIN PANEL MODAL -->
+<!-- 2. ADVANCED FIREBASE ADMIN PANEL MODAL -->
 <div class="modal-overlay" id="adminModal">
   <div class="modal-card admin-modal">
     <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
     
-    <!-- Admin Cloud Login -->
+    <!-- Admin Login -->
     <div id="adminAuthStep">
       <h3>Owner Cloud Login</h3>
       <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.3rem;">Log in with your registered Firebase Admin email.</p>
@@ -273,20 +372,36 @@
     <!-- Live Firebase Admin Dashboard -->
     <div id="adminContentStep" style="display: none;">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <h3>👑 Live Cloud Dashboard</h3>
+        <h3>👑 Al Shifa Admin Dashboard</h3>
         <button class="admin-btn" onclick="window.signOut(window.auth)">Log Out</button>
       </div>
 
-      <h4 style="margin-top: 1.2rem; color: var(--accent2);">Cloud Registered Patients:</h4>
-      <div style="overflow-x: auto; max-height: 180px;">
+      <!-- Rate List Control Feature -->
+      <div style="margin-top: 1.5rem; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+        <h4 style="color: var(--accent2);">💰 Update Test Rate List (INR ₹)</h4>
+        <form onsubmit="updateTestPrice(event)" class="rate-edit-row">
+          <select id="rateTestSelect" required>
+            <option value="cbc">CBC (Complete Blood Count)</option>
+            <option value="sugar">Blood Sugar Fasting/PP</option>
+            <option value="lipid">Lipid Profile</option>
+            <option value="thyroid">Thyroid Profile</option>
+            <option value="fullbody">Full Body Profile</option>
+          </select>
+          <input type="number" id="newRateInput" placeholder="New Price in ₹" required style="width: 140px; padding: 0.5rem;">
+          <button type="submit" class="cta" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Update Rate</button>
+        </form>
+      </div>
+
+      <h4 style="margin-top: 1.5rem; color: var(--accent2);">Cloud Registered Patients:</h4>
+      <div style="overflow-x: auto; max-height: 160px;">
         <table class="admin-table">
-          <thead><tr><th>Name</th><th>Phone</th></tr></thead>
-          <tbody id="firebaseUsersTable"><tr><td colspan="2">Loading cloud data...</td></tr></tbody>
+          <thead><tr><th>Name</th><th>Phone</th><th>WhatsApp</th></tr></thead>
+          <tbody id="firebaseUsersTable"><tr><td colspan="3">Loading cloud data...</td></tr></tbody>
         </table>
       </div>
 
-      <h4 style="margin-top: 1.2rem; color: var(--accent2);">Recent Test Bookings:</h4>
-      <div style="overflow-x: auto; max-height: 180px;">
+      <h4 style="margin-top: 1.5rem; color: var(--accent2);">Recent Patient Test Bookings:</h4>
+      <div style="overflow-x: auto; max-height: 160px;">
         <table class="admin-table">
           <thead><tr><th>Patient</th><th>Phone</th><th>Test</th></tr></thead>
           <tbody id="firebaseBookingsTable"><tr><td colspan="3">Loading cloud data...</td></tr></tbody>
@@ -298,7 +413,7 @@
 </div>
 
 <footer>
-  © 2026 Al Shifa Diagnostic Lab — Owner: Aadil Ramzan Lone (+91 7780912275). All Rights Reserved.
+  © 2026 Al Shifa Diagnostic Lab, Kreeri — Owner: Aadil Ramzan Lone (+91 7780912275). All Rights Reserved.
 </footer>
 
 <script>
@@ -309,6 +424,7 @@
     } else {
       setTimeout(() => document.getElementById('authModal').classList.add('active'), 3000);
     }
+    loadRatesFromStorage();
   });
 
   function closeModal(id) { document.getElementById(id).classList.remove('active'); }
@@ -325,7 +441,7 @@
       localStorage.setItem('alshifa_user', JSON.stringify({ name, phone }));
       document.getElementById('userGreeting').innerText = `👋 ${name}`;
       closeModal('authModal');
-      alert(`Welcome ${name}! Your profile is now saved.`);
+      alert(`Welcome ${name}! Your profile is saved.`);
     } catch (err) {
       alert("Error saving data: " + err.message);
     }
@@ -340,7 +456,7 @@
 
     try {
       await window.addDoc(window.collection(window.db, "bookings"), { name, phone, test, date: new Date().toISOString() });
-      alert("Booking saved to Cloud! The Al Shifa team will call you shortly.");
+      alert("Booking saved! Aadil Ramzan Lone & team will contact you shortly.");
       document.getElementById('bookName').value = '';
       document.getElementById('bookPhone').value = '';
       document.getElementById('bookTest').value = '';
@@ -362,6 +478,29 @@
     }
   }
 
+  // Rate Control Logic
+  function updateTestPrice(e) {
+    e.preventDefault();
+    const key = document.getElementById('rateTestSelect').value;
+    const newPrice = document.getElementById('newRateInput').value;
+
+    let rates = JSON.parse(localStorage.getItem('alshifa_rates') || '{}');
+    rates[key] = newPrice;
+    localStorage.setItem('alshifa_rates', JSON.stringify(rates));
+
+    loadRatesFromStorage();
+    alert(`Price updated to ₹${newPrice}!`);
+  }
+
+  function loadRatesFromStorage() {
+    let rates = JSON.parse(localStorage.getItem('alshifa_rates') || '{}');
+    if (rates.cbc) document.getElementById('price-cbc').innerText = `₹${rates.cbc}`;
+    if (rates.sugar) document.getElementById('price-sugar').innerText = `₹${rates.sugar}`;
+    if (rates.lipid) document.getElementById('price-lipid').innerText = `₹${rates.lipid}`;
+    if (rates.thyroid) document.getElementById('price-thyroid').innerText = `₹${rates.thyroid}`;
+    if (rates.fullbody) document.getElementById('price-fullbody').innerText = `₹${rates.fullbody}`;
+  }
+
   // Load Real-time Data from Firestore
   async function loadFirebaseAdminData() {
     try {
@@ -369,10 +508,10 @@
       const bookingsSnap = await window.getDocs(window.collection(window.db, "bookings"));
 
       const uTable = document.getElementById('firebaseUsersTable');
-      uTable.innerHTML = usersSnap.empty ? '<tr><td colspan="2">No registered patients.</td></tr>' : '';
+      uTable.innerHTML = usersSnap.empty ? '<tr><td colspan="3">No registered patients.</td></tr>' : '';
       usersSnap.forEach(doc => {
         const d = doc.data();
-        uTable.innerHTML += `<tr><td>${d.name}</td><td>${d.phone}</td></tr>`;
+        uTable.innerHTML += `<tr><td>${d.name}</td><td>${d.phone}</td><td><a href="https://wa.me/${d.phone.replace(/[^0-9]/g,'')}" target="_blank" style="color:#22c55e;">Chat</a></td></tr>`;
       });
 
       const bTable = document.getElementById('firebaseBookingsTable');
@@ -396,7 +535,6 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  // Build DNA Helix Structure
   const dnaGroup = new THREE.Group();
   const strandPoints = 35;
   const radius = 9;
@@ -410,21 +548,18 @@
     const angle = i * 0.25;
     const y = i * heightStep;
 
-    // Strand 1
     const x1 = Math.cos(angle) * radius;
     const z1 = Math.sin(angle) * radius;
     const p1 = new THREE.Mesh(sphereGeo, matBlue);
     p1.position.set(x1, y, z1);
     dnaGroup.add(p1);
 
-    // Strand 2
     const x2 = Math.cos(angle + Math.PI) * radius;
     const z2 = Math.sin(angle + Math.PI) * radius;
     const p2 = new THREE.Mesh(sphereGeo, matCyan);
     p2.position.set(x2, y, z2);
     dnaGroup.add(p2);
 
-    // Connected Rungs
     if (i % 2 === 0) {
       const lineGeo = new THREE.BufferGeometry().setFromPoints([
         new THREE.Vector3(x1, y, z1),
@@ -439,7 +574,6 @@
   dnaGroup.rotation.z = 0.3;
   scene.add(dnaGroup);
 
-  // Background Particle Field
   const pCount = 800;
   const pGeo = new THREE.BufferGeometry();
   const pPos = new Float32Array(pCount * 3);
