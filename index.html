@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Al Shifa Clinic & Diagnostics</title>
+<title>Al Shifa Clinic & Diagnostic Center</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
   :root {
-    --accent: #2563eb;
-    --accent2: #00e5ff;
-    --bg: #050814;
-    --glass: rgba(255, 255, 255, 0.06);
+    --accent: #0284c7;
+    --accent2: #38bdf8;
+    --bg: #030712;
+    --glass: rgba(255, 255, 255, 0.05);
     --text-primary: #ffffff;
-    --text-secondary: #c2c2d6;
+    --text-secondary: #9ca3af;
   }
   
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,10 +25,21 @@
     overflow-x: hidden;
   }
 
-  :focus-visible {
-    outline: 2px solid var(--accent2);
-    outline-offset: 4px;
+  /* Top Info Bar */
+  .top-bar {
+    background: rgba(2, 132, 199, 0.2);
+    border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+    padding: 0.5rem 5vw;
+    font-size: 0.82rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-secondary);
+    z-index: 101;
+    position: relative;
   }
+  .top-bar-info { display: flex; gap: 1.5rem; }
+  .top-bar-info span { display: flex; align-items: center; gap: 5px; }
 
   /* 3D Canvas Background */
   #bg-canvas {
@@ -41,24 +52,24 @@
 
   /* Navbar */
   nav {
-    position: fixed;
+    position: sticky;
     top: 0; width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.2rem 5vw;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    background: rgba(5, 8, 20, 0.7);
+    padding: 1.1rem 5vw;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(3, 7, 18, 0.8);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     z-index: 100;
   }
 
   .logo {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 800;
-    letter-spacing: 1px;
-    background: linear-gradient(90deg, #00e5ff, #3b82f6);
+    letter-spacing: 0.5px;
+    background: linear-gradient(90deg, #38bdf8, #818cf8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-decoration: none;
@@ -67,25 +78,15 @@
     gap: 8px;
   }
 
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
   .nav-links a {
     color: var(--text-secondary);
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 500;
     transition: color 0.3s;
-    position: relative;
   }
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    left: 0; bottom: -6px;
-    width: 0; height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    transition: width 0.3s ease;
-  }
-  .nav-links a:hover, .nav-links a:focus-visible { color: #fff; }
-  .nav-links a:hover::after, .nav-links a:focus-visible::after { width: 100%; }
+  .nav-links a:hover { color: #fff; }
 
   .menu-toggle {
     display: none;
@@ -98,52 +99,56 @@
 
   /* Hero */
   .hero {
-    min-height: 100vh;
+    min-height: 85vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 6rem 6vw 4rem;
+    padding: 4rem 6vw 2rem;
+  }
+  .hero-badge {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: var(--accent2);
+    padding: 0.4rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
   }
   .hero h1 {
-    font-size: clamp(2.2rem, 6vw, 5rem);
+    font-size: clamp(2.2rem, 5.5vw, 4.5rem);
     font-weight: 900;
-    line-height: 1.1;
-    letter-spacing: -1px;
+    line-height: 1.15;
     background: linear-gradient(120deg, #fff 40%, var(--accent2));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
   .hero p {
-    margin: 1.5rem 0 2.5rem;
-    font-size: clamp(1rem, 1.8vw, 1.25rem);
+    margin: 1.2rem 0 2rem;
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
     color: var(--text-secondary);
     max-width: 650px;
-    animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
-    opacity: 0;
   }
   .cta-group {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
     justify-content: center;
-    animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-    opacity: 0;
   }
   .cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.9rem 2.2rem;
+    padding: 0.85rem 2rem;
     border-radius: 50px;
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: #fff;
     text-decoration: none;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
-    box-shadow: 0 8px 30px rgba(0, 229, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(56, 189, 248, 0.25);
     transition: transform 0.3s, box-shadow 0.3s;
     border: none;
     cursor: pointer;
@@ -153,52 +158,75 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: none;
   }
-  .cta:hover, .cta:focus-visible {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(0, 229, 255, 0.4);
-  }
+  .cta:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(56, 189, 248, 0.35); }
 
   /* Sections */
-  section { padding: 6rem 6vw; position: relative; }
+  section { padding: 5rem 6vw; position: relative; }
   .section-title {
-    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
     font-weight: 800;
     text-align: center;
-    margin-bottom: 3.5rem;
-    letter-spacing: -1px;
+    margin-bottom: 3rem;
   }
   .section-title span {
-    background: linear-gradient(90deg, var(--accent2), #3b82f6);
+    background: linear-gradient(90deg, var(--accent2), #818cf8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+  /* Report Lookup Banner */
+  .report-box {
+    max-width: 800px;
+    margin: -2rem auto 4rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 20px;
+    padding: 2rem;
+    backdrop-filter: blur(16px);
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  }
+  .report-box h3 { font-size: 1.25rem; margin-bottom: 0.5rem; color: #fff; }
+  .report-form {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .report-form input {
+    flex: 1;
+    min-width: 220px;
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 0.95rem;
   }
 
   /* Cards */
   .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 2rem;
+    gap: 1.8rem;
     max-width: 1150px;
     margin: 0 auto;
-    perspective: 1000px;
   }
   .card {
     background: var(--glass);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 22px;
-    padding: 2.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 2rem;
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transition: transform 0.2s ease, box-shadow 0.3s, border-color 0.3s;
-    transform-style: preserve-3d;
+    transition: transform 0.3s, border-color 0.3s;
   }
   .card:hover {
-    box-shadow: 0 20px 50px rgba(0, 229, 255, 0.2);
-    border-color: rgba(0, 229, 255, 0.3);
+    border-color: rgba(56, 189, 248, 0.4);
+    transform: translateY(-5px);
   }
-  .card .icon { font-size: 2.5rem; margin-bottom: 1rem; display: inline-block; }
-  .card h3 { font-size: 1.35rem; margin-bottom: 0.8rem; }
-  .card p { color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem; }
+  .card .icon { font-size: 2.2rem; margin-bottom: 0.8rem; display: inline-block; }
+  .card h3 { font-size: 1.25rem; margin-bottom: 0.6rem; }
+  .card p { color: var(--text-secondary); line-height: 1.5; font-size: 0.9rem; }
 
   /* Test Directory / Pricing Table */
   .test-grid {
@@ -206,18 +234,18 @@
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
+    gap: 1.2rem;
   }
   .test-card {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
-    padding: 1.5rem;
+    padding: 1.4rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
-  .test-card h4 { font-size: 1.2rem; color: var(--accent2); margin-bottom: 0.4rem; }
+  .test-card h4 { font-size: 1.15rem; color: var(--accent2); margin-bottom: 0.3rem; }
   .test-card .desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; }
   .test-card .meta {
     display: flex;
@@ -225,276 +253,334 @@
     align-items: center;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding-top: 0.8rem;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
-  .price { font-weight: 700; color: #fff; }
+  .price { font-weight: 700; color: #fff; font-size: 1.1rem; }
 
-  /* Stats */
-  .stats {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 3rem 4rem;
+  /* Doctors Section */
+  .doctor-card {
     text-align: center;
+    background: var(--glass);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
   }
-  .stat h2 {
-    font-size: clamp(2.5rem, 5vw, 3.8rem);
-    font-weight: 900;
-    background: linear-gradient(90deg, var(--accent2), #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .doctor-avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.2rem; margin: 0 auto 1rem;
   }
-  .stat p { color: var(--text-secondary); margin-top: 0.3rem; font-weight: 500; }
+  .doctor-card h4 { font-size: 1.2rem; margin-bottom: 0.2rem; }
+  .doctor-card .spec { color: var(--accent2); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.8rem; }
+  .doctor-card .timing { font-size: 0.8rem; color: var(--text-secondary); }
 
   /* Form Section */
   .cta-section {
-    max-width: 700px;
+    max-width: 650px;
     margin: 0 auto;
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(0, 229, 255, 0.08));
-    border-radius: 28px;
-    padding: 3.5rem 2rem;
+    background: linear-gradient(135deg, rgba(2, 132, 199, 0.15), rgba(56, 189, 248, 0.05));
+    border-radius: 24px;
+    padding: 3rem 2rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(12px);
-    text-align: center;
   }
   
-  .contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-    margin-top: 2rem;
-    text-align: left;
-  }
-  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.3rem; text-align: left; }
   .form-group label { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; }
   .form-group input, .form-group select, .form-group textarea {
     width: 100%;
-    padding: 0.8rem 1.2rem;
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.4);
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: #fff;
-    font-family: inherit;
     font-size: 0.95rem;
   }
-  .form-group select option { background: #050814; color: #fff; }
+  .form-group select option { background: #030712; color: #fff; }
 
   footer {
     text-align: center;
     padding: 2.5rem 2rem;
-    color: #8a8a9e;
-    font-size: 0.9rem;
+    color: #6b7280;
+    font-size: 0.85rem;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .reveal { 
     opacity: 0; 
-    transform: translateY(40px); 
-    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
+    transform: translateY(30px); 
+    transition: opacity 0.8s ease, transform 0.8s ease; 
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
   @media (max-width: 768px) {
+    .top-bar-info { display: none; }
     .menu-toggle { display: block; }
     .nav-links {
       position: absolute;
       top: 100%; left: 0; width: 100%;
       flex-direction: column;
-      background: rgba(5, 8, 20, 0.95);
+      background: rgba(3, 7, 18, 0.98);
       backdrop-filter: blur(20px);
       padding: 1.5rem 2rem;
-      gap: 1.5rem;
+      gap: 1.2rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       display: none;
     }
     .nav-links.active { display: flex; }
-    section { padding: 4rem 5vw; }
+    section { padding: 3.5rem 5vw; }
   }
 </style>
 </head>
 <body>
 
+<!-- Top Info Bar -->
+<div class="top-bar">
+  <div class="top-bar-info">
+    <span>🕒 Mon - Sat: 7:00 AM - 9:00 PM | Sun: 8:00 AM - 2:00 PM</span>
+    <span>📍 Main Market Road, Near City Hospital</span>
+  </div>
+  <div>
+    <span>📞 Emergency / Reception: <strong>+1 (800) 555-SHIFA</strong></span>
+  </div>
+</div>
+
 <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
 <nav aria-label="Main Navigation">
-  <a href="#" class="logo">🏥 Al Shifa Clinic</a>
-  <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-label="Toggle navigation menu">☰</button>
+  <a href="#" class="logo">🩺 Al Shifa Clinic</a>
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">☰</button>
   <ul class="nav-links" id="navLinks">
     <li><a href="#services">Services</a></li>
-    <li><a href="#tests">Tests & Packages</a></li>
-    <li><a href="#stats">Impact</a></li>
+    <li><a href="#tests">Test Rates</a></li>
+    <li><a href="#doctors">Specialists</a></li>
+    <li><a href="#reports">Online Reports</a></li>
     <li><a href="#appointment">Book Appointment</a></li>
   </ul>
 </nav>
 
 <header class="hero">
-  <h1>Accurate Diagnostics,<br>Compassionate Care.</h1>
-  <p>Welcome to Al Shifa Clinic. We deliver fast, reliable medical testing and expert consultations powered by modern lab technology.</p>
+  <div class="hero-badge">✨ Advanced Molecular & Diagnostic Testing</div>
+  <h1>Accurate Testing.<br>Compassionate Healing.</h1>
+  <p>Al Shifa Clinic provides high-precision pathology lab tests, digital imaging, and specialist consultations with fast digital report turnaround.</p>
   <div class="cta-group">
-    <a href="#appointment" class="cta">Book a Test →</a>
-    <a href="#tests" class="cta cta-outline">View Test Prices</a>
+    <a href="#appointment" class="cta">Book Lab Test →</a>
+    <a href="#reports" class="cta cta-outline">Download Report</a>
   </div>
 </header>
 
 <main>
-  <!-- Services -->
-  <section id="services" aria-labelledby="services-title">
-    <h2 id="services-title" class="section-title reveal">Clinical <span>Services</span></h2>
+  <!-- Download Report Box -->
+  <div id="reports" class="report-box reveal">
+    <h3>📄 Download Patient Lab Report</h3>
+    <p style="color: var(--text-secondary); font-size: 0.88rem;">Enter your Lab ID / Invoice Number printed on your cash receipt.</p>
+    <form class="report-form" onsubmit="alert('Searching for report... In production, this connects to your clinic database.'); return false;">
+      <input type="text" placeholder="e.g. SHIFA-2026-8891" required>
+      <input type="tel" placeholder="Registered Mobile No." required>
+      <button type="submit" class="cta" style="padding: 0.8rem 1.8rem;">View Report</button>
+    </form>
+  </div>
+
+  <!-- Clinical Services -->
+  <section id="services">
+    <h2 class="section-title reveal">Clinical <span>Services</span></h2>
     <div class="cards">
       <article class="card reveal">
-        <span class="icon" role="img" aria-label="Microscope">🔬</span>
-        <h3>Pathology Lab</h3>
-        <p>Comprehensive blood, urine, and tissue testing with high-precision automated analyzers.</p>
+        <span class="icon">🔬</span>
+        <h3>Pathology & Blood Lab</h3>
+        <p>Automated CBC, biochemistry, hormone assays, and immunology testing using fully calibrated equipment.</p>
       </article>
       <article class="card reveal">
-        <span class="icon" role="img" aria-label="Heart">🫀</span>
-        <h3>ECG & Cardiology</h3>
-        <p>Quick, non-invasive heart health screenings and routine cardiovascular checkups.</p>
+        <span class="icon">🫀</span>
+        <h3>Cardiology & ECG</h3>
+        <p>Computerized 12-lead ECG, blood pressure monitoring, and cardiovascular screening tests.</p>
       </article>
       <article class="card reveal">
-        <span class="icon" role="img" aria-label="File">📄</span>
-        <h3>Digital Reports</h3>
-        <p>Get your test results delivered directly to your email or WhatsApp within hours.</p>
+        <span class="icon">🏠</span>
+        <h3>Home Sample Collection</h3>
+        <p>Book a trained phlebotomist to collect blood/urine samples safely from the comfort of your home.</p>
       </article>
     </div>
   </section>
 
   <!-- Popular Tests -->
-  <section id="tests" aria-labelledby="tests-title">
-    <h2 id="tests-title" class="section-title reveal">Popular <span>Test Packages</span></h2>
+  <section id="tests">
+    <h2 class="section-title reveal">Diagnostic <span>Test Rates</span></h2>
     <div class="test-grid reveal">
       <div class="test-card">
         <div>
           <h4>Complete Blood Count (CBC)</h4>
-          <p class="desc">Screens for anemia, infection, and general blood health.</p>
+          <p class="desc">Screens for anemia, white cell counts, platelets & infections.</p>
         </div>
         <div class="meta">
-          <span>Fast 10-Hour Fasting</span>
-          <span class="price">$20</span>
+          <span>Fasting: Not required</span>
+          <span class="price">$15</span>
         </div>
       </div>
       <div class="test-card">
         <div>
-          <h4>Lipid Profile (Cholesterol)</h4>
-          <p class="desc">Measures HDL, LDL, and triglycerides for heart health.</p>
+          <h4>Lipid Profile (Heart Risk)</h4>
+          <p class="desc">Cholesterol (HDL, LDL), Triglycerides and Cardiac Risk ratio.</p>
         </div>
         <div class="meta">
-          <span>12-Hour Fasting Req.</span>
-          <span class="price">$35</span>
-        </div>
-      </div>
-      <div class="test-card">
-        <div>
-          <h4>Diabetes Screen (HbA1c + Sugar)</h4>
-          <p class="desc">Evaluates average blood sugar levels over the past 3 months.</p>
-        </div>
-        <div class="meta">
-          <span>Same-Day Report</span>
+          <span>10-12 Hrs Fasting</span>
           <span class="price">$30</span>
         </div>
       </div>
       <div class="test-card">
         <div>
-          <h4>Full Body Health Checkup</h4>
-          <p class="desc">CBC, Kidney Function, Liver Function, Lipid Profile, and Urine Analysis.</p>
+          <h4>HbA1c & Fasting Glucose</h4>
+          <p class="desc">3-Month average blood sugar level assessment for diabetes control.</p>
         </div>
         <div class="meta">
-          <span>Comprehensive</span>
-          <span class="price">$99</span>
+          <span>Overnight Fasting</span>
+          <span class="price">$25</span>
+        </div>
+      </div>
+      <div class="test-card">
+        <div>
+          <h4>Thyroid Profile (T3, T4, TSH)</h4>
+          <p class="desc">Evaluates thyroid gland activity and metabolic function.</p>
+        </div>
+        <div class="meta">
+          <span>Morning sample pref.</span>
+          <span class="price">$35</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Stats -->
-  <section id="stats" aria-labelledby="stats-title">
-    <h2 id="stats-title" class="section-title reveal">Why Choose <span>Al Shifa</span></h2>
-    <div class="stats reveal">
-      <div class="stat"><h2>15K+</h2><p>Patients Served</p></div>
-      <div class="stat"><h2>99.4%</h2><p>Diagnostic Accuracy</p></div>
-      <div class="stat"><h2>< 6 hrs</h2><p>Report Turnaround</p></div>
+  <!-- Doctors Section -->
+  <section id="doctors">
+    <h2 class="section-title reveal">Consulting <span>Specialists</span></h2>
+    <div class="cards">
+      <div class="doctor-card reveal">
+        <div class="doctor-avatar">👨‍⚕️</div>
+        <h4>Dr. Ahmed Hassan</h4>
+        <div class="spec">MBBS, MD (General Physician)</div>
+        <div class="timing">Mon - Fri: 10:00 AM - 2:00 PM</div>
+      </div>
+      <div class="doctor-card reveal">
+        <div class="doctor-avatar">👩‍⚕️</div>
+        <h4>Dr. Fatima Zahra</h4>
+        <div class="spec">Pathologist & Lab Director</div>
+        <div class="timing">Mon - Sat: 8:00 AM - 4:00 PM</div>
+      </div>
+      <div class="doctor-card reveal">
+        <div class="doctor-avatar">👨‍⚕️</div>
+        <h4>Dr. Bilal Khan</h4>
+        <div class="spec">Consultant Cardiologist</div>
+        <div class="timing">Tue & Thu: 4:00 PM - 8:00 PM</div>
+      </div>
     </div>
   </section>
 
   <!-- Appointment Form -->
-  <section id="appointment" aria-labelledby="appointment-title">
-    <div class="cta-section reveal">
-      <h2 id="appointment-title">Book an Appointment / Test</h2>
-      <p style="color: var(--text-secondary);">Fill out the form below to reserve your slot at Al Shifa Clinic.</p>
+  <section id="appointment">
+    <div class="cta-section reveal" style="text-align: center;">
+      <h2>Book Appointment / Home Collection</h2>
+      <p style="color: var(--text-secondary); font-size: 0.9rem;">Fill out the form to schedule your lab visit or home sample collection.</p>
       
-      <form class="contact-form" action="#" method="POST" onsubmit="alert('Thank you! Al Shifa Clinic team will contact you shortly to confirm your appointment.'); return false;">
+      <form class="contact-form" action="#" method="POST" onsubmit="alert('Thank you! Al Shifa Clinic receptionist will call you shortly to confirm your booking.'); return false;">
         <div class="form-group">
-          <label for="patient-name">Full Name</label>
-          <input type="text" id="patient-name" required placeholder="Patient Name">
+          <label for="name">Patient Name</label>
+          <input type="text" id="name" required placeholder="Full Name">
         </div>
         <div class="form-group">
-          <label for="phone">Phone / WhatsApp Number</label>
+          <label for="phone">Phone / WhatsApp</label>
           <input type="tel" id="phone" required placeholder="+123 456 7890">
         </div>
         <div class="form-group">
-          <label for="test-type">Select Service or Test</label>
-          <select id="test-type" required>
-            <option value="">-- Choose Test Package --</option>
-            <option value="cbc">Complete Blood Count (CBC)</option>
-            <option value="lipid">Lipid Profile</option>
-            <option value="diabetes">Diabetes Screening</option>
-            <option value="full-checkup">Full Body Health Checkup</option>
-            <option value="doctor-consult">Doctor Consultation</option>
+          <label for="service">Select Required Service</label>
+          <select id="service" required>
+            <option value="">-- Choose Option --</option>
+            <option value="pathology">Lab Test at Clinic</option>
+            <option value="home-sample">Home Sample Collection</option>
+            <option value="doctor-appointment">Doctor Consultation</option>
+            <option value="ecg">ECG / Heart Checkup</option>
           </select>
         </div>
         <div class="form-group">
-          <label for="preferred-date">Preferred Date</label>
-          <input type="date" id="preferred-date" required>
+          <label for="date">Preferred Date & Time</label>
+          <input type="datetime-local" id="date" required>
         </div>
-        <button type="submit" class="cta" style="margin-top:0.5rem; width:100%;">Confirm Booking Request</button>
+        <button type="submit" class="cta" style="margin-top:0.5rem; width:100%;">Submit Booking Request</button>
       </form>
     </div>
   </section>
 </main>
 
-<footer>© 2026 Al Shifa Clinic & Diagnostics. All Rights Reserved.</footer>
+<footer>
+  © 2026 Al Shifa Clinic & Diagnostic Center. Reliable Care You Can Trust.
+</footer>
 
 <script>
-  // ===== Three.js Background Animation =====
+  // ===== Three.js DNA Double-Helix Background Animation =====
   const canvas = document.getElementById('bg-canvas');
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.z = 50;
+  camera.position.z = 60;
 
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  // Particle Field
-  const count = 1400;
-  const geometry = new THREE.BufferGeometry();
-  const positions = new Float32Array(count * 3);
-  for (let i = 0; i < count * 3; i++) positions[i] = (Math.random() - 0.5) * 160;
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  // Build DNA Strand
+  const dnaGroup = new THREE.Group();
+  const strandPoints = 35;
+  const radius = 9;
+  const heightStep = 1.8;
 
-  const material = new THREE.PointsMaterial({
-    size: 0.6,
-    color: 0x00e5ff,
-    transparent: true,
-    opacity: 0.6,
-    blending: THREE.AdditiveBlending
-  });
-  const particles = new THREE.Points(geometry, material);
+  const sphereGeo = new THREE.SphereGeometry(0.7, 8, 8);
+  const matBlue = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
+  const matCyan = new THREE.MeshBasicMaterial({ color: 0x0284c7 });
+
+  for (let i = -strandPoints; i < strandPoints; i++) {
+    const angle = i * 0.25;
+    const y = i * heightStep;
+
+    // Strand 1
+    const x1 = Math.cos(angle) * radius;
+    const z1 = Math.sin(angle) * radius;
+    const p1 = new THREE.Mesh(sphereGeo, matBlue);
+    p1.position.set(x1, y, z1);
+    dnaGroup.add(p1);
+
+    // Strand 2 (Opposite side)
+    const x2 = Math.cos(angle + Math.PI) * radius;
+    const z2 = Math.sin(angle + Math.PI) * radius;
+    const p2 = new THREE.Mesh(sphereGeo, matCyan);
+    p2.position.set(x2, y, z2);
+    dnaGroup.add(p2);
+
+    // Connecting Rungs (base pairs) every 2 steps
+    if (i % 2 === 0) {
+      const lineGeo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(x1, y, z1),
+        new THREE.Vector3(x2, y, z2)
+      ]);
+      const lineMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.35 });
+      const line = new THREE.Line(lineGeo, lineMat);
+      dnaGroup.add(line);
+    }
+  }
+
+  dnaGroup.rotation.z = 0.3; // Slight incline
+  scene.add(dnaGroup);
+
+  // Background Particles
+  const pCount = 800;
+  const pGeo = new THREE.BufferGeometry();
+  const pPos = new Float32Array(pCount * 3);
+  for (let i = 0; i < pCount * 3; i++) pPos[i] = (Math.random() - 0.5) * 160;
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+
+  const pMat = new THREE.PointsMaterial({ size: 0.5, color: 0x38bdf8, transparent: true, opacity: 0.4 });
+  const particles = new THREE.Points(pGeo, pMat);
   scene.add(particles);
-
-  // Floating Cross Geometry
-  const group = new THREE.Group();
-  const mat = new THREE.MeshBasicMaterial({ color: 0x2563eb, wireframe: true, transparent: true, opacity: 0.25 });
-  const box1 = new THREE.Mesh(new THREE.BoxGeometry(16, 5, 5), mat);
-  const box2 = new THREE.Mesh(new THREE.BoxGeometry(5, 16, 5), mat);
-  group.add(box1);
-  group.add(box2);
-  scene.add(group);
 
   let mouseX = 0, mouseY = 0;
   document.addEventListener('mousemove', e => {
@@ -512,12 +598,11 @@
     if (!isTabActive) return;
     requestAnimationFrame(animate);
 
-    particles.rotation.y += 0.0004;
-    group.rotation.x += 0.004;
-    group.rotation.y += 0.006;
+    dnaGroup.rotation.y += 0.008;
+    particles.rotation.y += 0.0003;
 
-    camera.position.x += (mouseX * 8 - camera.position.x) * 0.04;
-    camera.position.y += (-mouseY * 8 - camera.position.y) * 0.04;
+    camera.position.x += (mouseX * 8 - camera.position.x) * 0.03;
+    camera.position.y += (-mouseY * 8 - camera.position.y) * 0.03;
     camera.lookAt(scene.position);
 
     renderer.render(scene, camera);
@@ -536,7 +621,7 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // ===== Mobile Menu Toggle =====
+  // ===== Mobile Navigation =====
   const menuToggle = document.getElementById('menuToggle');
   const navLinks = document.getElementById('navLinks');
   menuToggle.addEventListener('click', () => {
