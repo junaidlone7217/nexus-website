@@ -106,7 +106,6 @@
     white-space: nowrap;
     transition: all 0.3s ease;
   }
-  .admin-btn:hover { background: rgba(225, 29, 72, 0.4); }
 
   .hero {
     min-height: 55vh;
@@ -430,7 +429,24 @@
   </footer>
 </div>
 
-<!-- 1. PATIENT POPUP -->
+<!-- INSTANT DIRECT BOOKING MODAL -->
+<div class="modal-overlay" id="instantBookingModal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal('instantBookingModal')">✕</button>
+    <h3 id="instantTestTitle">Book Test</h3>
+    <p style="color: var(--text-secondary); font-size: 0.82rem; margin-top: 0.2rem;">Complete your appointment details</p>
+    <form class="auth-form" onsubmit="submitInstantBooking(event)">
+      <input type="hidden" id="instantTestName">
+      <input type="text" id="instantName" placeholder="Patient Full Name" required>
+      <input type="tel" id="instantPhone" placeholder="Mobile / WhatsApp Number (+91)" required>
+      <label for="instantDateTime">Preferred Date & Time (8:00 AM - 6:00 PM):</label>
+      <input type="datetime-local" id="instantDateTime" required>
+      <button type="submit" class="cta" style="margin-top: 0.5rem;">Confirm & Send to WhatsApp</button>
+    </form>
+  </div>
+</div>
+
+<!-- PATIENT POPUP -->
 <div class="modal-overlay" id="authModal">
   <div class="modal-card">
     <button class="modal-close" onclick="closeModal('authModal')">✕</button>
@@ -444,7 +460,7 @@
   </div>
 </div>
 
-<!-- 2. MODERN GLASS ADMIN FULL-EDIT MODAL POPUP -->
+<!-- MODERN GLASS ADMIN FULL-EDIT MODAL POPUP -->
 <div class="modal-overlay" id="editTestModal">
   <div class="modal-card">
     <button class="modal-close" onclick="closeModal('editTestModal')">✕</button>
@@ -466,7 +482,7 @@
   </div>
 </div>
 
-<!-- 3. ADVANCED FIREBASE ADMIN PANEL MODAL -->
+<!-- ADVANCED FIREBASE ADMIN PANEL MODAL -->
 <div class="modal-overlay" id="adminModal">
   <div class="modal-card admin-modal">
     <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
@@ -538,6 +554,8 @@
       document.getElementById('userGreeting').innerText = `👋 ${u.name}`;
       document.getElementById('bookName').value = u.name || '';
       document.getElementById('bookPhone').value = u.phone || '';
+      document.getElementById('instantName').value = u.name || '';
+      document.getElementById('instantPhone').value = u.phone || '';
     } else {
       setTimeout(() => document.getElementById('authModal').classList.add('active'), 3000);
     }
@@ -587,12 +605,68 @@
           <span>${t.req}</span>
           <span class="price">₹${t.price}</span>
         </div>
-        <button class="book-test-btn" onclick="quickBook('${t.title}')">Book Now</button>
+        <button class="book-test-btn" onclick="openInstantBooking('${t.title}')">Book Now</button>
       </div>
     `).join('');
   }
 
-  // Live Auto Suggestions in Appointment Input
+  // INSTANT DIRECT BOOKING MODAL HANDLER
+  function openInstantBooking(testName) {
+    document.getElementById('instantTestTitle').innerText = "Book: " + testName;
+    document.getElementById('instantTestName').value = testName;
+    
+    const saved = localStorage.getItem('alshifa_user');
+    if (saved) {
+      const u = JSON.parse(saved);
+      document.getElementById('instantName').value = u.name || '';
+      document.getElementById('instantPhone').value = u.phone || '';
+    }
+    
+    document.getElementById('instantBookingModal').classList.add('active');
+  }
+
+  async function submitInstantBooking(e) {
+    e.preventDefault();
+    const test = document.getElementById('instantTestName').value;
+    const name = document.getElementById('instantName').value;
+    const phone = document.getElementById('instantPhone').value;
+    const dateTimeVal = document.getElementById('instantDateTime').value;
+
+    if (!dateTimeVal) {
+      alert("Please select a date and time.");
+      return;
+    }
+
+    const selectedDate = new Date(dateTimeVal);
+    const hours = selectedDate.getHours();
+
+    if (hours < 8 || hours >= 18) {
+      alert("⚠️ Al Shifa Diagnostic Lab is closed at the selected time.\n\nPlease select a time between 8:00 AM and 6:00 PM.");
+      return;
+    }
+
+    const formattedDateTime = selectedDate.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+
+    try {
+      await window.addDoc(window.collection(window.db, "bookings"), { 
+        name, phone, test, preferredDateTime: formattedDateTime, createdAt: new Date().toISOString() 
+      });
+
+      const textMessage = `🚨 *NEW LAB TEST BOOKING — AL SHIFA LAB*%0A%0A` +
+                          `👤 *Patient Name:* ${encodeURIComponent(name)}%0A` +
+                          `📞 *Contact Number:* ${encodeURIComponent(phone)}%0A` +
+                          `🔬 *Requested Test:* ${encodeURIComponent(test)}%0A` +
+                          `⏰ *Preferred Date & Time:* ${encodeURIComponent(formattedDateTime)}%0A%0A` +
+                          `_Sent via Al Shifa Lab Website_`;
+
+      const whatsappUrl = `https://wa.me/917780912275?text=${textMessage}`;
+      closeModal('instantBookingModal');
+      window.location.href = whatsappUrl;
+    } catch (err) {
+      alert("Error saving booking: " + err.message);
+    }
+  }
+
   function showTestSuggestions() {
     const query = document.getElementById('bookTest').value.toLowerCase();
     const box = document.getElementById('suggestionsBox');
@@ -622,7 +696,6 @@
     document.getElementById('bookDateTime').focus();
   }
 
-  // Sleek Glass Modal Full Test Editor
   function openTestEditModal(id) {
     const tests = getStoredTests();
     const item = tests.find(t => t.id === id);
@@ -686,14 +759,6 @@
     document.getElementById('newTestPrice').value = '';
   }
 
-  function quickBook(testName) {
-    document.getElementById('bookTest').value = testName;
-    document.getElementById('appointment').scrollIntoView({ behavior: 'smooth' });
-    setTimeout(() => {
-      document.getElementById('bookDateTime').focus();
-    }, 400);
-  }
-
   function filterTests() {
     const query = document.getElementById('testSearchInput').value.toLowerCase();
     const cards = document.querySelectorAll('.test-card');
@@ -714,6 +779,8 @@
       document.getElementById('userGreeting').innerText = `👋 ${name}`;
       document.getElementById('bookName').value = name;
       document.getElementById('bookPhone').value = phone;
+      document.getElementById('instantName').value = name;
+      document.getElementById('instantPhone').value = phone;
       closeModal('authModal');
       alert(`Welcome ${name}! Profile saved.`);
     } catch (err) {
@@ -745,10 +812,7 @@
     const btn = document.getElementById('submitBookingBtn');
     btn.innerText = "Processing...";
 
-    const formattedDateTime = selectedDate.toLocaleString('en-IN', {
-      dateStyle: 'medium',
-      timeStyle: 'short'
-    });
+    const formattedDateTime = selectedDate.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
 
     try {
       await window.addDoc(window.collection(window.db, "bookings"), { 
