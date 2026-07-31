@@ -39,7 +39,6 @@
     position: relative;
   }
   .top-bar-info { display: flex; gap: 1.5rem; }
-  .top-bar-info span { display: flex; align-items: center; gap: 5px; }
   .phone-link { color: var(--accent2); text-decoration: none; font-weight: 700; }
 
   /* 3D Canvas Background */
@@ -79,7 +78,7 @@
     gap: 8px;
   }
 
-  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
   .nav-links a {
     color: var(--text-secondary);
     text-decoration: none;
@@ -88,6 +87,17 @@
     transition: color 0.3s;
   }
   .nav-links a:hover { color: #fff; }
+
+  .admin-btn {
+    background: rgba(225, 29, 72, 0.2);
+    border: 1px solid rgba(225, 29, 72, 0.4);
+    color: #f43f5e;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
 
   .menu-toggle {
     display: none;
@@ -154,16 +164,7 @@
     border: none;
     cursor: pointer;
   }
-  .cta-whatsapp {
-    background: #25d366;
-    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
-  }
-  .cta-outline {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: none;
-  }
-  .cta:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(56, 189, 248, 0.35); }
+  .cta-whatsapp { background: #25d366; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3); }
 
   /* Sections */
   section { padding: 5rem 6vw; position: relative; }
@@ -177,61 +178,6 @@
     background: linear-gradient(90deg, var(--accent2), #818cf8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-  }
-
-  /* Owner Card */
-  .owner-card {
-    max-width: 800px;
-    margin: 0 auto 3rem;
-    background: linear-gradient(135deg, rgba(2, 132, 199, 0.2), rgba(3, 7, 18, 0.6));
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    border-radius: 24px;
-    padding: 2.5rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    backdrop-filter: blur(12px);
-    flex-wrap: wrap;
-  }
-  .owner-avatar {
-    width: 100px; height: 100px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 3rem; flex-shrink: 0;
-  }
-  .owner-details h3 { font-size: 1.5rem; color: #fff; margin-bottom: 0.3rem; }
-  .owner-details .title { color: var(--accent2); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.8rem; }
-  .owner-details p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
-
-  /* Report Lookup Banner */
-  .report-box {
-    max-width: 800px;
-    margin: -2rem auto 4rem;
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    border-radius: 20px;
-    padding: 2rem;
-    backdrop-filter: blur(16px);
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-  }
-  .report-box h3 { font-size: 1.25rem; margin-bottom: 0.5rem; color: #fff; }
-  .report-form {
-    display: flex;
-    gap: 0.8rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-  }
-  .report-form input {
-    flex: 1;
-    min-width: 220px;
-    padding: 0.8rem 1.2rem;
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff;
-    font-size: 0.95rem;
   }
 
   /* Cards */
@@ -248,69 +194,65 @@
     border-radius: 20px;
     padding: 2rem;
     backdrop-filter: blur(12px);
-    transition: transform 0.3s, border-color 0.3s;
   }
-  .card:hover {
-    border-color: rgba(56, 189, 248, 0.4);
-    transform: translateY(-5px);
-  }
-  .card .icon { font-size: 2.2rem; margin-bottom: 0.8rem; display: inline-block; }
-  .card h3 { font-size: 1.25rem; margin-bottom: 0.6rem; }
-  .card p { color: var(--text-secondary); line-height: 1.5; font-size: 0.9rem; }
 
-  /* Test Directory / Pricing Table */
-  .test-grid {
-    max-width: 950px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.2rem;
-  }
-  .test-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: 1.4rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .test-card h4 { font-size: 1.15rem; color: var(--accent2); margin-bottom: 0.3rem; }
-  .test-card .desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; }
-  .test-card .meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding-top: 0.8rem;
-    font-size: 0.85rem;
-  }
-  .price { font-weight: 700; color: #fff; font-size: 1.1rem; }
-
-  /* Form Section */
-  .cta-section {
-    max-width: 650px;
-    margin: 0 auto;
-    background: linear-gradient(135deg, rgba(2, 132, 199, 0.15), rgba(56, 189, 248, 0.05));
-    border-radius: 24px;
-    padding: 3rem 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Modals Overlay */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
   }
-  
-  .contact-form { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
-  .form-group { display: flex; flex-direction: column; gap: 0.3rem; text-align: left; }
-  .form-group label { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; }
-  .form-group input, .form-group select, .form-group textarea {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff;
-    font-size: 0.95rem;
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+  .modal-card {
+    background: #090d16;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    width: 90%;
+    max-width: 480px;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    text-align: center;
   }
-  .form-group select option { background: #030712; color: #fff; }
+  .modal-close {
+    position: absolute;
+    top: 15px; right: 20px;
+    font-size: 1.5rem; color: #9ca3af;
+    cursor: pointer; background: none; border: none;
+  }
+
+  .modal-card h3 { font-size: 1.5rem; margin-bottom: 0.4rem; color: #fff; }
+  .modal-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+  .auth-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+  .auth-form input {
+    width: 100%; padding: 0.82rem 1rem; border-radius: 10px;
+    background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff; font-size: 0.95rem;
+  }
+
+  /* Admin Modal Specifics */
+  .admin-modal { max-width: 750px; text-align: left; }
+  .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .admin-stat-card {
+    background: rgba(255, 255, 255, 0.04); padding: 1.2rem;
+    border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .admin-stat-card h4 { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
+  .admin-stat-card div { font-size: 1.6rem; font-weight: 800; color: var(--accent2); }
+
+  .admin-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+  .admin-table th, .admin-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .admin-table th { color: var(--accent2); }
 
   footer {
     text-align: center;
@@ -320,30 +262,15 @@
     border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 
-  .reveal { 
-    opacity: 0; 
-    transform: translateY(30px); 
-    transition: opacity 0.8s ease, transform 0.8s ease; 
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
   @media (max-width: 768px) {
     .top-bar-info { display: none; }
     .menu-toggle { display: block; }
     .nav-links {
-      position: absolute;
-      top: 100%; left: 0; width: 100%;
-      flex-direction: column;
-      background: rgba(3, 7, 18, 0.98);
-      backdrop-filter: blur(20px);
-      padding: 1.5rem 2rem;
-      gap: 1.2rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      display: none;
+      position: absolute; top: 100%; left: 0; width: 100%;
+      flex-direction: column; background: rgba(3, 7, 18, 0.98);
+      padding: 1.5rem 2rem; gap: 1.2rem; display: none;
     }
     .nav-links.active { display: flex; }
-    section { padding: 3.5rem 5vw; }
-    .owner-card { text-align: center; justify-content: center; }
   }
 </style>
 </head>
@@ -363,13 +290,12 @@
 
 <nav aria-label="Main Navigation">
   <a href="#" class="logo">🔬 Al Shifa Diagnostic Lab</a>
-  <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">☰</button>
+  <button class="menu-toggle" id="menuToggle">☰</button>
   <ul class="nav-links" id="navLinks">
-    <li><a href="#about">About Us</a></li>
+    <li><span id="userGreeting" style="color: var(--accent2); font-weight: 600; font-size: 0.85rem;"></span></li>
     <li><a href="#services">Services</a></li>
-    <li><a href="#tests">Test Rates</a></li>
-    <li><a href="#reports">Online Reports</a></li>
     <li><a href="#appointment">Book Test</a></li>
+    <li><button class="admin-btn" onclick="openAdminLogin()">🔒 Admin Panel</button></li>
   </ul>
 </nav>
 
@@ -379,145 +305,209 @@
   <p>Al Shifa Diagnostic Lab provides high-precision pathology tests, blood analysis, and home sample collection services.</p>
   <div class="cta-group">
     <a href="#appointment" class="cta">Book Lab Test →</a>
-    <a href="https://wa.me/917780912275?text=Hello%20Al%20Shifa%20Lab,%20I%20want%20to%20inquire%20about%20a%20test." class="cta cta-whatsapp" target="_blank">Chat on WhatsApp</a>
+    <a href="https://wa.me/917780912275?text=Hello%20Al%20Shifa%20Lab," class="cta cta-whatsapp" target="_blank">Chat on WhatsApp</a>
   </div>
 </header>
 
-<main>
-  <!-- Download Report Box -->
-  <div id="reports" class="report-box reveal">
-    <h3>📄 Download Patient Test Report</h3>
-    <p style="color: var(--text-secondary); font-size: 0.88rem;">Enter your Lab Bill Number or Mobile Number to search for your digital report.</p>
-    <form class="report-form" onsubmit="alert('Searching for report... Connecting to Al Shifa Lab records.'); return false;">
-      <input type="text" placeholder="e.g. SHIFA-1029" required>
-      <input type="tel" placeholder="+91 7780912275" required>
-      <button type="submit" class="cta" style="padding: 0.8rem 1.8rem;">View Report</button>
+<!-- Services -->
+<section id="services">
+  <h2 class="section-title">Laboratory <span>Services</span></h2>
+  <div class="cards">
+    <article class="card">
+      <span style="font-size:2rem;">🩸</span>
+      <h3>Pathology Lab</h3>
+      <p>Complete blood counts, hemoglobin, blood grouping, and infection screenings.</p>
+    </article>
+    <article class="card">
+      <span style="font-size:2rem;">🧪</span>
+      <h3>Biochemistry Tests</h3>
+      <p>Kidney function (KFT), Liver function (LFT), Lipid profile, and Blood Sugar testing.</p>
+    </article>
+  </div>
+</section>
+
+<!-- Appointment Form -->
+<section id="appointment">
+  <div style="max-width: 650px; margin: 0 auto; background: rgba(2, 132, 199, 0.1); padding: 2.5rem; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1);">
+    <h2 style="text-align: center; margin-bottom: 1rem;">Book Test Appointment</h2>
+    <form class="auth-form" onsubmit="handleBooking(event)">
+      <input type="text" id="bookName" placeholder="Patient Full Name" required>
+      <input type="tel" id="bookPhone" placeholder="Mobile / WhatsApp Number" required>
+      <input type="text" id="bookTest" placeholder="Required Test (e.g. CBC, Blood Sugar)" required>
+      <button type="submit" class="cta" style="width: 100%; margin-top: 0.5rem;">Submit Booking</button>
     </form>
   </div>
+</section>
 
-  <!-- Owner / About Section -->
-  <section id="about">
-    <div class="owner-card reveal">
-      <div class="owner-avatar">👨‍🔬</div>
-      <div class="owner-details">
-        <h3>Aadil Ramzan Lone</h3>
-        <div class="title">Founder & Owner — Al Shifa Diagnostic Lab</div>
-        <p>Under the leadership of Aadil Ramzan Lone, Al Shifa Lab is committed to delivering highly accurate medical diagnostics, prompt reporting, and personal patient care. Reach out directly at <strong style="color: #fff;">+91 77809 12275</strong> for inquiries or urgent testing requests.</p>
-      </div>
-    </div>
-  </section>
+<!-- 1. USER LOGIN / SIGNUP POPUP (3 Sec Trigger) -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeAuthModal()">✕</button>
+    <h3>Welcome to Al Shifa Lab</h3>
+    <p>Sign up or login to manage your lab bookings and access digital reports.</p>
+    <form class="auth-form" onsubmit="handleUserRegister(event)">
+      <input type="text" id="userNameInput" placeholder="Your Full Name" required>
+      <input type="tel" id="userPhoneInput" placeholder="Mobile Number (+91)" required>
+      <button type="submit" class="cta" style="width: 100%;">Continue to Website</button>
+    </form>
+  </div>
+</div>
 
-  <!-- Clinical Services -->
-  <section id="services">
-    <h2 class="section-title reveal">Laboratory <span>Services</span></h2>
-    <div class="cards">
-      <article class="card reveal">
-        <span class="icon">🩸</span>
-        <h3>Pathology & Hematology</h3>
-        <p>Complete blood counts, hemoglobin, blood grouping, ESR, and infection screenings.</p>
-      </article>
-      <article class="card reveal">
-        <span class="icon">🧪</span>
-        <h3>Biochemistry Tests</h3>
-        <p>Kidney function (KFT), Liver function (LFT), Lipid profile, and Blood Sugar testing.</p>
-      </article>
-      <article class="card reveal">
-        <span class="icon">🏠</span>
-        <h3>Home Sample Collection</h3>
-        <p>Call or WhatsApp +91 7780912275 to schedule safe home sample pickup at your convenient time.</p>
-      </article>
-    </div>
-  </section>
-
-  <!-- Popular Tests -->
-  <section id="tests">
-    <h2 class="section-title reveal">Diagnostic <span>Test Rates</span></h2>
-    <div class="test-grid reveal">
-      <div class="test-card">
-        <div>
-          <h4>Complete Blood Count (CBC)</h4>
-          <p class="desc">Screens for anemia, infections, white cells & platelet count.</p>
-        </div>
-        <div class="meta">
-          <span>Fast Results</span>
-          <span class="price">₹250</span>
-        </div>
-      </div>
-      <div class="test-card">
-        <div>
-          <h4>Blood Sugar (Fasting / PP)</h4>
-          <p class="desc">Monitors glucose levels for diabetes assessment.</p>
-        </div>
-        <div class="meta">
-          <span>Same-Day Report</span>
-          <span class="price">₹100</span>
-        </div>
-      </div>
-      <div class="test-card">
-        <div>
-          <h4>Lipid Profile (Cholesterol)</h4>
-          <p class="desc">Evaluates HDL, LDL, and Triglycerides for heart health.</p>
-        </div>
-        <div class="meta">
-          <span>10-12 Hrs Fasting</span>
-          <span class="price">₹500</span>
-        </div>
-      </div>
-      <div class="test-card">
-        <div>
-          <h4>Thyroid Profile (T3, T4, TSH)</h4>
-          <p class="desc">Evaluates thyroid gland function and metabolic health.</p>
-        </div>
-        <div class="meta">
-          <span>Comprehensive</span>
-          <span class="price">₹450</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Appointment Form -->
-  <section id="appointment">
-    <div class="cta-section reveal" style="text-align: center;">
-      <h2>Book Test / Home Sample Pickup</h2>
-      <p style="color: var(--text-secondary); font-size: 0.9rem;">Fill out the form below or call <strong style="color: #fff;">+91 7780912275</strong> directly.</p>
-      
-      <form class="contact-form" action="#" method="POST" onsubmit="alert('Thank you! Aadil Ramzan Lone & the Al Shifa Lab team will contact you shortly.'); return false;">
-        <div class="form-group">
-          <label for="name">Patient Name</label>
-          <input type="text" id="name" required placeholder="Full Name">
-        </div>
-        <div class="form-group">
-          <label for="phone">Phone / WhatsApp</label>
-          <input type="tel" id="phone" required placeholder="+91 77809 12275">
-        </div>
-        <div class="form-group">
-          <label for="service">Select Required Test / Service</label>
-          <select id="service" required>
-            <option value="">-- Choose Option --</option>
-            <option value="cbc">Complete Blood Count (CBC)</option>
-            <option value="blood-sugar">Blood Sugar Test</option>
-            <option value="lipid">Lipid Profile</option>
-            <option value="thyroid">Thyroid Profile</option>
-            <option value="home-collection">Home Sample Collection</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="date">Preferred Date & Time</label>
-          <input type="datetime-local" id="date" required>
-        </div>
-        <button type="submit" class="cta" style="margin-top:0.5rem; width:100%;">Submit Booking Request</button>
+<!-- 2. EXCLUSIVE ADMIN PANEL MODAL -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal-card admin-modal">
+    <button class="modal-close" onclick="closeAdminModal()">✕</button>
+    
+    <!-- Secret Login Step -->
+    <div id="adminAuthStep">
+      <h3>Owner Dashboard Login</h3>
+      <p>Enter secret PIN to access Al Shifa Lab Admin Panel.</p>
+      <form class="auth-form" onsubmit="handleAdminLogin(event)">
+        <input type="password" id="adminPinInput" placeholder="Enter Secret Admin PIN (Default: 77809)" required>
+        <button type="submit" class="cta" style="width: 100%;">Unlock Admin Panel</button>
       </form>
     </div>
-  </section>
-</main>
+
+    <!-- Admin Panel Content Step -->
+    <div id="adminContentStep" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3>👑 Al Shifa Admin Dashboard</h3>
+        <span style="font-size: 0.8rem; color: #22c55e;">● Owner: Aadil Ramzan Lone</span>
+      </div>
+
+      <div class="admin-stats">
+        <div class="admin-stat-card">
+          <h4>Total Registered Users</h4>
+          <div id="statTotalUsers">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <h4>Recent Bookings</h4>
+          <div id="statTotalBookings">0</div>
+        </div>
+      </div>
+
+      <h4>Recent Patient Booking Requests:</h4>
+      <div style="overflow-x: auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Phone</th>
+              <th>Requested Test</th>
+            </tr>
+          </thead>
+          <tbody id="adminBookingsTable">
+            <tr><td colspan="3" style="color: var(--text-secondary);">No bookings recorded yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <footer>
   © 2026 Al Shifa Diagnostic Lab — Owner: Aadil Ramzan Lone (+91 7780912275). All Rights Reserved.
 </footer>
 
 <script>
-  // ===== Three.js DNA Animation =====
+  // ===== User Session & 3-Second Popup Logic =====
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedUser = localStorage.getItem('alshifa_user');
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      document.getElementById('userGreeting').innerText = `👋 Welcome, ${user.name}`;
+    } else {
+      // Trigger popup after 3 seconds if not previously registered
+      setTimeout(() => {
+        document.getElementById('authModal').classList.add('active');
+      }, 3000);
+    }
+  });
+
+  function closeAuthModal() {
+    document.getElementById('authModal').classList.remove('active');
+  }
+
+  function handleUserRegister(e) {
+    e.preventDefault();
+    const name = document.getElementById('userNameInput').value;
+    const phone = document.getElementById('userPhoneInput').value;
+
+    const userData = { name, phone, registeredAt: new Date().toLocaleDateString() };
+    localStorage.setItem('alshifa_user', JSON.stringify(userData));
+
+    // Save to global users list for Admin
+    let usersList = JSON.parse(localStorage.getItem('alshifa_all_users') || '[]');
+    usersList.push(userData);
+    localStorage.setItem('alshifa_all_users', JSON.stringify(usersList));
+
+    document.getElementById('userGreeting').innerText = `👋 Welcome, ${name}`;
+    closeAuthModal();
+    alert(`Welcome ${name}! Your account is now active on Al Shifa Lab.`);
+  }
+
+  // ===== Booking Logic =====
+  function handleBooking(e) {
+    e.preventDefault();
+    const name = document.getElementById('bookName').value;
+    const phone = document.getElementById('bookPhone').value;
+    const test = document.getElementById('bookTest').value;
+
+    const bookingData = { name, phone, test };
+    let bookingsList = JSON.parse(localStorage.getItem('alshifa_bookings') || '[]');
+    bookingsList.push(bookingData);
+    localStorage.setItem('alshifa_bookings', JSON.stringify(bookingsList));
+
+    alert('Booking submitted! The Al Shifa Lab team will contact you shortly.');
+    document.getElementById('bookName').value = '';
+    document.getElementById('bookPhone').value = '';
+    document.getElementById('bookTest').value = '';
+  }
+
+  // ===== Exclusive Admin Panel Logic =====
+  function openAdminLogin() {
+    document.getElementById('adminModal').classList.add('active');
+  }
+
+  function closeAdminModal() {
+    document.getElementById('adminModal').classList.remove('active');
+  }
+
+  function handleAdminLogin(e) {
+    e.preventDefault();
+    const pin = document.getElementById('adminPinInput').value;
+
+    // Secret Admin PIN check (Default: 77809)
+    if (pin === '77809') {
+      document.getElementById('adminAuthStep').style.display = 'none';
+      document.getElementById('adminContentStep').style.display = 'block';
+      loadAdminData();
+    } else {
+      alert('Incorrect Secret PIN! Access Denied.');
+    }
+  }
+
+  function loadAdminData() {
+    const users = JSON.parse(localStorage.getItem('alshifa_all_users') || '[]');
+    const bookings = JSON.parse(localStorage.getItem('alshifa_bookings') || '[]');
+
+    document.getElementById('statTotalUsers').innerText = users.length;
+    document.getElementById('statTotalBookings').innerText = bookings.length;
+
+    const tableBody = document.getElementById('adminBookingsTable');
+    if (bookings.length > 0) {
+      tableBody.innerHTML = bookings.map(b => `
+        <tr>
+          <td>${b.name}</td>
+          <td>${b.phone}</td>
+          <td>${b.test}</td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  // ===== Three.js Animated DNA Background =====
   const canvas = document.getElementById('bg-canvas');
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -528,97 +518,32 @@
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   const dnaGroup = new THREE.Group();
-  const strandPoints = 35;
-  const radius = 9;
-  const heightStep = 1.8;
-
   const sphereGeo = new THREE.SphereGeometry(0.7, 8, 8);
   const matBlue = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
-  const matCyan = new THREE.MeshBasicMaterial({ color: 0x0284c7 });
 
-  for (let i = -strandPoints; i < strandPoints; i++) {
+  for (let i = -30; i < 30; i++) {
     const angle = i * 0.25;
-    const y = i * heightStep;
+    const y = i * 1.8;
 
-    const x1 = Math.cos(angle) * radius;
-    const z1 = Math.sin(angle) * radius;
+    const x1 = Math.cos(angle) * 9;
+    const z1 = Math.sin(angle) * 9;
     const p1 = new THREE.Mesh(sphereGeo, matBlue);
     p1.position.set(x1, y, z1);
     dnaGroup.add(p1);
-
-    const x2 = Math.cos(angle + Math.PI) * radius;
-    const z2 = Math.sin(angle + Math.PI) * radius;
-    const p2 = new THREE.Mesh(sphereGeo, matCyan);
-    p2.position.set(x2, y, z2);
-    dnaGroup.add(p2);
-
-    if (i % 2 === 0) {
-      const lineGeo = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(x1, y, z1),
-        new THREE.Vector3(x2, y, z2)
-      ]);
-      const lineMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.35 });
-      const line = new THREE.Line(lineGeo, lineMat);
-      dnaGroup.add(line);
-    }
   }
-
   dnaGroup.rotation.z = 0.3;
   scene.add(dnaGroup);
 
-  const pCount = 800;
-  const pGeo = new THREE.BufferGeometry();
-  const pPos = new Float32Array(pCount * 3);
-  for (let i = 0; i < pCount * 3; i++) pPos[i] = (Math.random() - 0.5) * 160;
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-
-  const pMat = new THREE.PointsMaterial({ size: 0.5, color: 0x38bdf8, transparent: true, opacity: 0.4 });
-  const particles = new THREE.Points(pGeo, pMat);
-  scene.add(particles);
-
-  let mouseX = 0, mouseY = 0;
-  document.addEventListener('mousemove', e => {
-    mouseX = (e.clientX / window.innerWidth - 0.5);
-    mouseY = (e.clientY / window.innerHeight - 0.5);
-  }, { passive: true });
-
-  let isTabActive = true;
-  document.addEventListener('visibilitychange', () => {
-    isTabActive = !document.hidden;
-    if (isTabActive) animate();
-  });
-
   function animate() {
-    if (!isTabActive) return;
     requestAnimationFrame(animate);
-
     dnaGroup.rotation.y += 0.008;
-    particles.rotation.y += 0.0003;
-
-    camera.position.x += (mouseX * 8 - camera.position.x) * 0.03;
-    camera.position.y += (-mouseY * 8 - camera.position.y) * 0.03;
-    camera.lookAt(scene.position);
-
     renderer.render(scene, camera);
   }
   animate();
 
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
   const menuToggle = document.getElementById('menuToggle');
   const navLinks = document.getElementById('navLinks');
-  menuToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-  });
+  menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
 </script>
 </body>
 </html>
